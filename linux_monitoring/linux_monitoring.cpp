@@ -2,7 +2,7 @@
 #include <chrono>
 #include <string>
 #include <vector>
-//#include <python3.8/Python.h>
+#include <python3.8/Python.h>
 
 using namespace std;
 
@@ -128,6 +128,8 @@ string get_cpu_temperature(){
     return get_data_as_string("cat /sys/class/thermal/thermal_zone*/temp");
 }
 //memory
+void set_ram_
+
 string get_ram_info(){
   return "["+ get_data_from_columns_as_string("free --"+ram_unit+" | grep Mem")
   + "," + get_data_from_columns_as_string("free --"+ram_unit+" | grep Swap") + "]";
