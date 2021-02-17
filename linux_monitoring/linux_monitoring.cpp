@@ -2,12 +2,15 @@
 #include <chrono>
 #include <string>
 #include <vector>
-#include </urs/include/python3.8/Python.h>
 
 using namespace std;
 
-bool is_init = false;
-unsigned int cpu_core_count;
+bool           is_init = false;
+bool           cpu_term_online = false;
+bool           cpu_freq_online = false;
+bool           cpu_temp_online = false;
+bool           ram_unit_online = false;
+unsigned int   cpu_core_count;
 vector<double> cpu_freq_max;
 vector<double> cpu_freq_min;
 vector<double> cpu_term_max;
@@ -56,26 +59,23 @@ string vtos(vector<double> v){
 string get_data_from_columns_as_string(string cmd){
   string data = "[";
   FILE * stream;
-  char letter;
-  bool end = false;
+  char letter, last_letter = ' ';
   cmd.append(" 2>&1");
   stream = popen(cmd.c_str(), "r");
   if (stream) {
+    while(!feof(stream) && !ferror(stream) && fgetc(stream) > ':'){}
     while (!feof(stream) && !ferror(stream)){
       letter = fgetc(stream);
-      if(letter == ' ' || letter == ':')end = true;
-      else if(letter == '\n'){}
-      else{
-        if(end){
-          end = false;
-          data.push_back(',');
-        }
+      if(letter == ' ' && last_letter != ' '){
+        data.push_back(',');
+      }else if (letter != ' ' && letter != '\n'){
         data.push_back(letter);
       }
+      last_letter = letter;
     }
   }
-  data.pop_back();
   pclose(stream);
+  data.pop_back();
   data += "]";
   return data;
 }
@@ -128,11 +128,9 @@ string get_cpu_temperature(){
     return get_data_as_string("cat /sys/class/thermal/thermal_zone*/temp");
 }
 //memory
-void set_ram_
-
 string get_ram_info(){
-  return "["+ get_data_from_columns_as_string("free --"+ram_unit+" | grep Mem")
-  + "," + get_data_from_columns_as_string("free --"+ram_unit+" | grep Swap") + "]";
+  return "{\"Mem\":"+ get_data_from_columns_as_string("free --"+ram_unit+" | grep Mem")
+  + ",\"Swap\":" + get_data_from_columns_as_string("free --"+ram_unit+" | grep Swap") + "}";
 }
 //gpu
 //net
