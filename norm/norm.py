@@ -11,7 +11,7 @@ def index():
 
 @app.route('/update', methods = ['POST'])
 def update():
-    return monitoring.dynamic(json.loads(request.data))
+    return monitoring.dynamic()
 
 @app.route('/setup', methods = ['POST'])
 def setup():
