@@ -12,7 +12,6 @@ def index():
 @app.route('/update', methods = ['POST'])
 def update():
     return monitoring.dynamic("cpu temp ram net_speed disk_usage")
-    return json.dumps([1,2,3])
 
 @app.route('/setup', methods = ['POST'])
 def setup():

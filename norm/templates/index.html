@@ -10,14 +10,16 @@
         <title>Norm</title>
     </head>
     <body onload="">
-        <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+        <nav class="navbar navbar-gradient" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                    <figure class="image is-96x96">
-                        <img height="100px" width="100px" src="{{ url_for('static', filename='media/icon.jpg') }}">
+                    <figure class="image is-64x64 m-3">
+                        <img class="is-rounded" height="100px" width="100px" src="{{ url_for('static', filename='media/icon.jpg') }}">
                     </figure>
-              </div>
-          </nav>
-          <!-- navbar -->
+            </div>
+        </nav>
+        <!-- navbar -->
+
+        <!-- level-->
         <p id="cpu">CPU</p>
         <p id="temps">TEMPS</p>
         <p id="ram">RAM</p>
