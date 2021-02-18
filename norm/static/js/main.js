@@ -19,11 +19,25 @@ class Client{
     }
     async setup(){
         let static_vars = await this.post('/setup')
-        console.log(static_vars)
+        this.static_data = static_vars
     }
     async listener(){
         while (this.active){
-            if(this.data.push(this.post('/update', this.fields)) > this.buffer_size)this.data.shift();
+            if(this.data.push(await this.post('/update', this.fields)) > this.buffer_size)this.data.shift();
+            var json = this.data[this.data.length-1]
+            $("#cpu").html("cpu_usage = "+json["cpu_usage"][0])
+            var temps = ""
+            for(var key in json["temp"]){
+                temps += key + " = " + json["temp"][key]+"°C | "
+            }
+            $("#temps").html("temps: "+temps)
+            $("#ram").html("ram: "+json["ram"]+"%")
+            var net = ""
+            for(var key in json["net_speed"]){
+                net += key + " = " + json["net_speed"][key]+" | "
+            }
+            $("#net").html("intefaces: "+net)
+            $("#disk").html("disk usage: "+json["disk_usage"]+"%")
             await this.sleep(this.rate)
         }
     }
