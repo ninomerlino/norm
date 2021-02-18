@@ -5,12 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <link rel="icon" href="{{ url_for('static', filename='media/icon.jpg') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/bulma.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
-        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
         <title>Norm</title>
     </head>
     <body>
-        <div class="box is-primary">hello my friend</div>
+        <script src="{{ url_for('static', filename='js/jquery-3.5.1.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <p id="cpu">CPU</p>
+        <p id="temps">TEMPS</p>
+        <p id="ram">RAM</p>
+        <p id="net">NET</p>
+        <p id="disk">DISK</p>
     </body>
 </html>

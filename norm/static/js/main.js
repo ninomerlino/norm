@@ -56,4 +56,9 @@ function toggle(idname, classname){
 function start_client(){
     var client = new Client()
     client.setup()
+    client.listener()
 }
+
+$(document).ready(function(){
+    start_client()
+ });
