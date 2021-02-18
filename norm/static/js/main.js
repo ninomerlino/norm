@@ -34,10 +34,12 @@ class Client{
 
     }
 }
-$(document).ready(
-    function(){
-        var client = new Client()
-        client.setup()
-        //client.listener()
-    }
-)
+
+function toggle(idname, classname){
+    document.getElementById(idname).classList.toggle(classname);
+}
+
+function start_client(){
+    var client = new Client()
+    client.setup()
+}
