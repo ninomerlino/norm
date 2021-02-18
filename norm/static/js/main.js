@@ -2,7 +2,6 @@ class Client{
     max_rate = 10000
     min_rate = 500
     constructor(){
-        this.fields = []
         this.data = []
         this.rate = 1000
         this.active = true
@@ -25,19 +24,19 @@ class Client{
         while (this.active){
             if(this.data.push(await this.post('/update', this.fields)) > this.buffer_size)this.data.shift();
             let json = this.data[this.data.length-1]
-            updateLastdata("cpu", json["cpu_usage"][0])
+            updateLastdata("cpu", json["cpu_usage"][0]+"%")
             let temps = ""
             for(let key in json["temp"]){
-                temps += key + " = " + json["temp"][key]+"°C | "
+                temps += key + " = " + json["temp"][key]+"°C "
             }
             updateLastdata("temps", temps)
-            updateLastdata("ram", json["ram"]);
+            updateLastdata("ram", json["ram"]+"%");
             let net = ""
             for(let key in json["net_speed"]){
-                net += key + " = " + json["net_speed"][key]+" | "
+                net += key + " = " + json["net_speed"][key]+" "
             }
             updateLastdata("net", net);
-            updateLastdata("disk", json["disk_usage"]);
+            updateLastdata("disk", json["disk_usage"]+"%");
             await this.sleep(this.rate)
         }
     }
@@ -47,8 +46,20 @@ class Client{
     error_alert(msg){
 
     }
+    async toggle_field(index){
+        let btn = document.getElementById("selector").children[index];
+        btn.classList.toggle("is-outlined");
+        btn.classList.toggle("is-danger");
+        btn.classList.toggle("is-success");
+        if(this.fields[index]){
+            this.fields[index] = false;
+        }else{
+            this.fields[index] = true;
+        }
+        let tile = document.getElementsByClassName("is-parent")[index];
+        tile.classList.toggle("is-hidden")
+    }
 }
-
 function toggle(idname, classname){
     document.getElementById(idname).classList.toggle(classname);
 }
@@ -56,7 +67,8 @@ function updateLastdata(idname, value){
     document.getElementById(idname).innerText = idname + " : " + value;
 }
 function start_client(){
-    var client = new Client()
+    client = new Client()
     client.setup()
     client.listener()
 }
+var client = null;

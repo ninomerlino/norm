@@ -1,7 +1,7 @@
 import json
 from sys import argv
 import monitoring
-from flask import Flask, render_template, Request
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -11,7 +11,7 @@ def index():
 
 @app.route('/update', methods = ['POST'])
 def update():
-    return monitoring.dynamic("cpu temp ram net_speed disk_usage")
+    return monitoring.dynamic(json.loads(request.data))
 
 @app.route('/setup', methods = ['POST'])
 def setup():

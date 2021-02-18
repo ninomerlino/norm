@@ -9,21 +9,59 @@
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
         <title>Norm</title>
     </head>
-    <body onload="">
-        <nav class="navbar navbar-gradient" role="navigation" aria-label="main navigation">
+    <body onload="start_client()">
+        <nav class="navbar is-primary gradient" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                     <figure class="image is-64x64 m-3">
                         <img class="is-rounded" height="100px" width="100px" src="{{ url_for('static', filename='media/icon.jpg') }}">
                     </figure>
+              </div>
+          </nav>
+          <!-- navbar -->
+          <div id="selector" class="level pt-1 pb-1 pl-6 pr-6">
+              <a class="level-item button is-rounded is-success m-6" onclick="client.toggle_field(0)">CPU</a>
+              <a class="level-item button is-rounded is-success m-6" onclick="client.toggle_field(1)">TEMPERATURE</a>
+              <a class="level-item button is-rounded is-success m-6" onclick="client.toggle_field(2)">RAM</a>
+              <a class="level-item button is-rounded is-success m-6" onclick="client.toggle_field(3)">DISK</a>
+              <a class="level-item button is-rounded is-success m-6" onclick="client.toggle_field(4)">NETWORK</a>
+          </div>
+          <!-- level -->
+        <div class="tile is-ancestor p-4">
+            <div class="tile is-vertical">
+                <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                        <p class="title">CPU</p>
+                        <p class="content" id="cpu">CPU</p>
+                    </article>
+                </div>
+                <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                        <p class="title">TEMP</p>
+                        <p class="content" id="temps">TEMP</p>
+                    </article>
+                </div>
+                <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                        <p class="title">RAM</p>
+                        <p class="content" id="ram">RAM</p>
+                    </article>
+                </div>
             </div>
-        </nav>
-        <!-- navbar -->
+            <div class="tile is-vertical">
+                <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                        <p class="title">DISK</p>
+                        <p class="content" id="disk">DISK</p>
+                    </article>
+                </div>
 
-        <!-- level-->
-        <p id="cpu">CPU</p>
-        <p id="temps">TEMPS</p>
-        <p id="ram">RAM</p>
-        <p id="net">NET</p>
-        <p id="disk">DISK</p>
+                <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                        <p class="title">NET</p>
+                        <p class="content" id="net">NET</p>
+                    </article>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

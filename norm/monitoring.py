@@ -54,16 +54,16 @@ def setup() -> dict :
     output['disk'] = disk_dimension()
     return output
 
-def dynamic(args) -> dict :
+def dynamic(values) -> dict :
     output = {}
-    if "cpu" in args:
+    if values[0]:
         output["cpu_usage"] = cpu_usage()
-    if "temp" in args:
+    if values[1]:
         output["temp"] = temp()
-    if "ram" in args:
+    if values[2]:
         output["ram"] = ram_usage()
-    if "net" in args:
-        output["net_speed"] = net_speed()
-    if "disk" in args:
+    if values[3]:
         output["disk_usage"] = disk_usage()
+    if values[4]:
+        output["net_speed"] = net_speed()
     return output
