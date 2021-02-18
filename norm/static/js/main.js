@@ -22,7 +22,7 @@ class Client{
     }
     async listener(){
         while (this.active){
-            if(this.data.push(await this.post('/update', this.fields)) > this.buffer_size)this.data.shift();
+            if(this.data.push(await this.post('/update')) > this.buffer_size)this.data.shift();
             let json = this.data[this.data.length-1]
             updateLastdata("cpu", json["cpu_usage"][0]+"%")
             let temps = ""
