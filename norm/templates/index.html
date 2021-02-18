@@ -9,7 +9,7 @@
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
         <title>Norm</title>
     </head>
-    <body onload="">
+    <body onload="start_client()">
         <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                     <figure class="image is-96x96">
@@ -18,10 +18,43 @@
               </div>
           </nav>
           <!-- navbar -->
-        <p id="cpu">CPU</p>
-        <p id="temps">TEMPS</p>
-        <p id="ram">RAM</p>
-        <p id="net">NET</p>
-        <p id="disk">DISK</p>
+
+        <div class="tile is-ancestor p-4">
+            <div class="tile is-vertical">
+                <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                        <p class="title">CPU</p>
+                        <p class="content" id="cpu">CPU</p>
+                    </article>
+                </div>
+                <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                        <p class="title">TEMP</p>
+                        <p class="content" id="temps">TEMP</p>
+                    </article>
+                </div>
+                <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                        <p class="title">RAM</p>
+                        <p class="content" id="ram">RAM</p>
+                    </article>
+                </div>
+            </div>
+            <div class="tile is-vertical">
+                <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                        <p class="title">DISK</p>
+                        <p class="content" id="disk">DISK</p>
+                    </article>
+                </div>
+
+                <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                        <p class="title">NET</p>
+                        <p class="content" id="net">NET</p>
+                    </article>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
