@@ -9,15 +9,12 @@
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
         <title>Norm</title>
     </head>
-    <body onload="start_client()">
+    <body onload="">
         <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                <a class="navbar-item">
-                    <img class="is-rounded" src="{{ url_for('static', filename='media/icon.jpg') }}">
-                </a>
-                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-                    <i class="fas fa-arrow-right"></i>
-                </a>
+                    <figure class="image is-96x96">
+                        <img height="100px" width="100px" src="{{ url_for('static', filename='media/icon.jpg') }}">
+                    </figure>
               </div>
           </nav>
           <!-- navbar -->
