@@ -1,2 +1,25 @@
-main 146.6 0 226.3
-secondary 0 255 248.5
+:root{
+  --primary: #9300e2;
+  --info: #00e1f8;
+  --success: #33ca7f;
+  --warning: #f5cb5c;
+  --danger: #ed254e;
+  --background: #232528;
+  --light: #eaf2e3;
+}
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
+}

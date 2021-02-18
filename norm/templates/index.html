@@ -5,12 +5,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <link rel="icon" href="{{ url_for('static', filename='media/icon.jpg') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/bulma.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/norm-main.css') }}">
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
         <title>Norm</title>
     </head>
     <body>
-        <div class="box is-primary">hello my friend</div>
+        <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item">
+                    <img class="is-rounded" src="{{ url_for('static', filename='media/icon.jpg') }}">
+                </a>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+              </div>
+          </nav>
+          <!-- navbar -->
     </body>
 </html>

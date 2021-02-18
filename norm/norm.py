@@ -27,7 +27,7 @@ def flag_check(flag : str, default):
 
 if __name__ == '__main__':
     host = flag_check('-h', '0.0.0.0')
-    port = flag_check('-p', 8888)
+    port = flag_check('-p', 5000)
     debug = False
     if '-d' in argv:
         debug = True
