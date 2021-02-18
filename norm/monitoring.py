@@ -57,7 +57,7 @@ def setup() -> dict :
     output['disk'] = disk_dimension()
     return output
 
-def dinamic(args) -> dict :
+def dynamic(args) -> dict :
     output = {}
     if "cpu" in args:
         output["cpu_usage"] = cpu_usage()

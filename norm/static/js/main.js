@@ -23,7 +23,14 @@ class Client{
     }
     async listener(){
         while (this.active){
-            if(this.data.push(this.post('/update', this.fields)) > this.buffer_size)this.data.shift();
+            if(this.data.push(await this.post('/update', this.fields)) > this.buffer_size)this.data.shift();
+            var json = this.data[this.data.length-1]
+            $("#cpu").html("cpu_usage = "+json["cpu_usage"][0])
+                var temps = "temps: "
+            for(var key in json["temp"]){
+                temps += key + " = " + json["temp"][key]+" | "
+            }
+            $("#temps").html("temps: \n"+temps)
             await this.sleep(this.rate)
         }
     }
@@ -38,6 +45,6 @@ $(document).ready(
     function(){
         var client = new Client()
         client.setup()
-        //client.listener()
+        client.listener()
     }
 )

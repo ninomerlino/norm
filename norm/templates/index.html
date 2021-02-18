@@ -9,8 +9,10 @@
         <title>Norm</title>
     </head>
     <body>
-        <p>hello</p>
+        <script src="{{ url_for('static', filename='js/jquery-3.5.1.js') }}"></script>
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
         <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+        <p id="cpu">CPU</p>
+        <p id="temps">TEMPS</p>
     </body>
 </html>
