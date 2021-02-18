@@ -24,20 +24,20 @@ class Client{
     async listener(){
         while (this.active){
             if(this.data.push(await this.post('/update', this.fields)) > this.buffer_size)this.data.shift();
-            var json = this.data[this.data.length-1]
-            $("#cpu").html("cpu_usage = "+json["cpu_usage"][0])
-            var temps = ""
-            for(var key in json["temp"]){
+            let json = this.data[this.data.length-1]
+            updateLastdata("cpu", json["cpu_usage"][0])
+            let temps = ""
+            for(let key in json["temp"]){
                 temps += key + " = " + json["temp"][key]+"°C | "
             }
-            $("#temps").html("temps: "+temps)
-            $("#ram").html("ram: "+json["ram"]+"%")
-            var net = ""
-            for(var key in json["net_speed"]){
+            updateLastdata("temps", temps)
+            updateLastdata("ram", json["ram"]);
+            let net = ""
+            for(let key in json["net_speed"]){
                 net += key + " = " + json["net_speed"][key]+" | "
             }
-            $("#net").html("intefaces: "+net)
-            $("#disk").html("disk usage: "+json["disk_usage"]+"%")
+            updateLastdata("net", net);
+            updateLastdata("disk", json["disk_usage"]);
             await this.sleep(this.rate)
         }
     }
@@ -52,8 +52,11 @@ class Client{
 function toggle(idname, classname){
     document.getElementById(idname).classList.toggle(classname);
 }
-
+function updateLastdata(idname, value){
+    document.getElementById(idname).innerText = idname + " : " + value;
+}
 function start_client(){
     var client = new Client()
     client.setup()
+    client.listener()
 }

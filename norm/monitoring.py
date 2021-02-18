@@ -1,11 +1,8 @@
 import psutil
 
 def cpu_usage():
-    cpu = psutil.cpu_freq(percpu=True)
-    output = []
-    for core in cpu:
-        output.append((core[0]-core[1])*100/(core[2]-core[1]))
-    return output
+    cpu = psutil.cpu_percent(0.3, percpu=True)
+    return cpu
 
 def cpu_freq():
     cpu = psutil.cpu_freq()
