@@ -7,6 +7,7 @@
         <link rel="icon" href="{{ url_for('static', filename='media/icon.jpg') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/norm-main.css') }}">
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
         <title>Norm</title>
     </head>
     <body onload="start_client()">
@@ -32,6 +33,7 @@
                     <article class="tile is-child notification is-info">
                         <p class="title">CPU</p>
                         <p class="content" id="cpu">CPU</p>
+                        <canvas id="cpu_graph" width="100"></canvas>
                     </article>
                 </div>
                 <div class="tile is-parent">
