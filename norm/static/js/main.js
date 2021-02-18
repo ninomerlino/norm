@@ -19,7 +19,7 @@ class Client{
     }
     setup(){
         this.post('/setup').then(resolve => this.static_data)
-        this.create_graph()
+        this.cpu_Graph = this.create_line_graph('cpu_graph', ["core 0"])
     }
     async listener(){
         while (this.active){
@@ -54,31 +54,25 @@ class Client{
         tile.classList.toggle("is-hidden")
     }
 
-    create_graph(){
-        let ctx = document.getElementById('cpu_graph').getContext('2d')
-        this.cpu_Graph = new Chart(ctx, {
-            type: 'line',
-            data: {
-                datasets: [{
-                    label: '% cpu usage',
-                    data: [],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                    ],
-                    borderWidth: 9,
-                    fill: false
-                }]
-            },
-            options : {responsive: true}
-        })
+    create_line_graph(ctx_id, sets_name){//'cpu_graph'
+        let ctx = document.getElementById(ctx_id).getContext('2d')
+        let sets = []
+        sets_name.forEach(name => {
+            sets.push({label: name,data: [],
+                backgroundColor: ['rgba(0, 0, 0, 0)',],
+                borderColor: [randColor()],
+                borderWidth: 9,
+                fill: false
+            })
+        });
+        return  new Chart(ctx, {type: 'line',data: {datasets:sets,},options : {responsive: true}})
     }
 
-    update_graph(graph, point){
-        graph.data.datasets[0].data.push(point)
+    update_graph(graph, values){
+        for(let x = 0; x < values.length; x++){graph.data.datasets[x].data.push(values[x])}
         graph.data.labels.push("")
+        if(graph.data.datasets.length > this.buffer_size)
+            graph.data.datasets.forEach( set => { set.data.pop()});
         graph.update()
     }
 }
@@ -87,6 +81,12 @@ function toggle(idname, classname){
 }
 function updateLastdata(idname, value){
     document.getElementById(idname).innerText = idname + " : " + value;
+}
+function randColor(){
+    return "#" + Math.floor(Math.random()*16777215).toString(16);
+}
+function getTime(){
+    return new Date.now().getUTCSeconds();
 }
 function start_client(){
     client = new Client()
