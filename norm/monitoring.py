@@ -10,6 +10,7 @@ def cpu_freq():
     i = 0
     while(i < len(corelist)):#brutto ma for loop non funziona se i core sono uguali
         output[f"core {i}"] = [corelist[i][1], corelist[i][2]]
+        i+=1
     return output
 
 def termal_sensors():
