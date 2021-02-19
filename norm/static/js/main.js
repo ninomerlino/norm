@@ -8,7 +8,7 @@ class ColorGenerator{
         return "#" + ColorGenerator.last_color.toString(16);
     }
     static reset(){
-        last_color = 255;
+        ColorGenerator.last_color = 255;
     }
 }
 class Client{
