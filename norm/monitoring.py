@@ -7,8 +7,9 @@ def cpu_usage():
 def cpu_freq():
     corelist = psutil.cpu_freq(percpu=True)
     output = {}
-    for core in corelist:
-        output[f"core {corelist.index(core)}"] = [core[1], core[2]]
+    i = 0
+    while(i < corelist.lenght):#brutto ma for loop non funziona se i core sono uguali
+        output[f"core {i}"] = [corelist[i][1], corelist[i][2]]
     return output
 
 def termal_sensors():
