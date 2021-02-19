@@ -5,27 +5,35 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <link rel="icon" href="{{ url_for('static', filename='media/icon.jpg') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/norm-custom.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/norm-main.css') }}">
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
         <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
         <title>Norm</title>
     </head>
-    <body onload="start_client()">
+    <body onload="start_client()" class="white">
         <nav class="navbar is-primary gradient" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                     <figure class="image is-64x64 m-3">
                         <img class="is-rounded" height="100px" width="100px" src="{{ url_for('static', filename='media/icon.jpg') }}">
                     </figure>
+                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                      </a>
+              </div>
+              <div id="navbar-menu" class="navbar-menu">
+                  <div id="selector" class="navbar-end">
+                    <a class="navbar-item level-item button is-rounded is-success m-6 is-small" onclick="client.toggle_field(0)">CPU</a>
+                    <a class="navbar-item level-item button is-rounded is-success m-6 is-small" onclick="client.toggle_field(1)">TEMPERATURE</a>
+                    <a class="navbar-item level-item button is-rounded is-success m-6 is-small" onclick="client.toggle_field(2)">RAM</a>
+                    <a class="navbar-item level-item button is-rounded is-success m-6 is-small" onclick="client.toggle_field(3)">DISK</a>
+                    <a class="navbar-item level-item button is-rounded is-success m-6 is-small" onclick="client.toggle_field(4)">NETWORK</a>
+                  </div>
               </div>
           </nav>
           <!-- navbar -->
-          <div id="selector" class="level pt-1 pb-1 pl-6 pr-6">
-              <a class="level-item button is-rounded is-success m-6" onclick="client.toggle_field(0)">CPU</a>
-              <a class="level-item button is-rounded is-success m-6" onclick="client.toggle_field(1)">TEMPERATURE</a>
-              <a class="level-item button is-rounded is-success m-6" onclick="client.toggle_field(2)">RAM</a>
-              <a class="level-item button is-rounded is-success m-6" onclick="client.toggle_field(3)">DISK</a>
-              <a class="level-item button is-rounded is-success m-6" onclick="client.toggle_field(4)">NETWORK</a>
-          </div>
           <!-- level -->
         <div>
             <section class="section is-link">

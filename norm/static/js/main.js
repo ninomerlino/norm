@@ -69,7 +69,7 @@ class Client{
         let sets = []
         sets_name.forEach(name => {
             sets.push({label: name,data: [],
-                backgroundColor: ['rgba(0, 0, 0, 0)',],
+                backgroundColor: ['rgba(0,0,0,0)'],
                 borderColor: [randColor()],
                 borderWidth: 3,
                 fill: false
@@ -113,14 +113,18 @@ function updateLastdata(idname, value){
     document.getElementById(idname).innerText = idname + " : " + value;
 }
 function randColor(){
-    return "#" + Math.floor(Math.random()*16777215).toString(16);
+    let color = "";
+    while (!(color in reserved_color) && color != "") {
+        color = "#" + Math.floor(Math.random()*16777215).toString(16);
+    }
+    return color;
 }
 function getTime(){
     return new Date.now().getUTCSeconds();
 }
 async function start_client(){
-    Chart.defaults.global.defaultColor = 'rgba(0,0,0,1)'
     client = new Client()
     await client.setup()
     client.listener()
 }
+var reserved_color = ['#232528'];
