@@ -8,7 +8,7 @@ def cpu_freq():
     corelist = psutil.cpu_freq(percpu=True)
     output = {}
     i = 0
-    while(i < corelist.lenght):#brutto ma for loop non funziona se i core sono uguali
+    while(i < len(corelist)):#brutto ma for loop non funziona se i core sono uguali
         output[f"core {i}"] = [corelist[i][1], corelist[i][2]]
     return output
 
