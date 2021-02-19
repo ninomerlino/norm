@@ -119,6 +119,7 @@ function getTime(){
     return new Date.now().getUTCSeconds();
 }
 async function start_client(){
+    Chart.defaults.global.defaultColor = 'rgba(0,0,0,1)'
     client = new Client()
     await client.setup()
     client.listener()
