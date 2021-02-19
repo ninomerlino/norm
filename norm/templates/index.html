@@ -27,15 +27,40 @@
               <a class="level-item button is-rounded is-success m-6" onclick="client.toggle_field(4)">NETWORK</a>
           </div>
           <!-- level -->
-        <div class="tile is-ancestor p-4">
-            <div class="tile is-vertical">
-                <div class="tile is-parent">
-                    <article class="tile is-child notification is-info">
-                        <p class="title">CPU</p>
+        <div>
+            <section class="hero is-link">
+                <div class="hero-body">
+                    <p class="title">
+                        CPU
+                    </p>
+                    <p class="subtitle">
                         <p class="content" id="cpu">CPU</p>
                         <canvas id="cpu_graph" width="100"></canvas>
-                    </article>
+                    </p>
                 </div>
+            </section>
+            <section class="hero is-link">
+                <div class="hero-body">
+                    <p class="title">
+                        Temperatures
+                    </p>
+                    <p class="subtitle">
+                        <p class="content" id="temps">Temps</p>
+                        <canvas id="temp_graph" width="100"></canvas>
+                    </p>
+                </div>
+            </section>
+            <section class="hero is-link">
+                <div class="hero-body">
+                    <p class="title">
+                        RAM
+                    </p>
+                    <p class="subtitle">
+                        <p class="content" id="ram">Ram</p>
+                        <canvas id="cpu_graph" width="100"></canvas>
+                    </p>
+                </div>
+            </section>
                 <div class="tile is-parent">
                     <article class="tile is-child notification is-info">
                         <p class="title">TEMP</p>
