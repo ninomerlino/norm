@@ -5,9 +5,15 @@ def cpu_usage():
     return cpu
 
 def cpu_freq():
-    cpu = psutil.cpu_freq()
-    output = {"max":cpu[2], "min":cpu[1]}
+    corelist = psutil.cpu_freq(percpu=True)
+    output = {}
+    for core in corelist:
+        output[f"core {corelist.index(core)}"] = [core[1], core[2]]
     return output
+
+def termal_sensors():
+    temp = psutil.sensors_temperatures()
+    return list(temp.keys())
 
 def temp():
     temp = psutil.sensors_temperatures()
@@ -52,7 +58,7 @@ def setup() -> dict :
     output['ram'] = ram_dimension()
     output['net'] = net_addr()
     output['disk'] = disk_dimension()
-    output["temp"] = temp()
+    output["temp"] = termal_sensors()
     return output
 
 def dynamic() -> dict :
