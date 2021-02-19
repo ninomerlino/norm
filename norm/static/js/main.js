@@ -15,7 +15,6 @@ class Client{
     static max_rate = 10000
     static min_rate = 500
     constructor(){
-        this.data = []
         this.rate = 1000
         this.active = true
         this.buffer_size = 20 
@@ -44,21 +43,11 @@ class Client{
     }
     async listener(){
         while (this.active){
-            if(this.data.push(await this.post('/update')) > this.buffer_size)this.data.shift();
-            let json = this.data[this.data.length-1]
-
-            this.update_graph(this.cpu_Graph, [parseFloat(json["cpu_usage"][0])])
+            let json = await this.post('/update')
+            this.update_graph(this.cpu_Graph,json["cpu_usage"].map(val => parseFloat(val)))
             this.update_graph(this.ram_Graph, [parseFloat(json["ram"])])
-            let net = []
-            for(let key in json["net_speed"]){
-                net.push(parseFloat(json["net_speed"][key]))
-            }
-            this.update_graph(this.net_Graph, net)
-            let temps = []
-            for(let key in json["temp"]){
-                temps.push(parseFloat(json["temp"][key]))
-            }
-            this.update_graph(this.temp_Graph, temps)
+            this.update_graph(this.net_Graph, Object.values(json["net_speed"]).map(val => parseFloat(val)))
+            this.update_graph(this.temp_Graph, Object.values(json["temp"]).map(val => parseFloat(val)))
             this.disk_Graph.data.datasets[0].data = [parseFloat(json["disk_usage"]), 100-parseFloat(json["disk_usage"])] 
             this.disk_Graph.update()
             await this.sleep(this.rate)
