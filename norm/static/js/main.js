@@ -15,7 +15,7 @@ class Client{
     static max_rate = 10000
     static min_rate = 500
     constructor(){
-        this.rate = 1000
+        this.rate = 750
         this.active = true
         this.buffer_size = 20 
         this.static_data = {}
@@ -35,13 +35,13 @@ class Client{
     }
     async setup(){
         this.static_data = await this.post('/setup')
-        this.cpu_Graph = this.create_line_graph('cpu_graph', Object.keys(client.static_data.cpu))
-        this.ram_Graph = this.create_line_graph('ram_graph', ["ram"], true)
+        this.cpu_Graph = this.create_line_graph('cpu_graph', Object.keys(client.static_data.cpu), true)
+        this.ram_Graph = this.create_bar_graph('ram_graph', ["ram"], true)
         this.net_Graph = this.create_line_graph('net_graph', Object.keys(this.static_data.net))
         this.temp_Graph = this.create_line_graph('temp_graph', this.static_data.temp)
-        this.disk_Graph = this.create_pie_graph('disk_graph', ["used","free"], ["orange", "green"])
+        this.disk_Graph = this.create_pie_graph('disk_graph', ["used","free"], ["#ec1944", "#33ca7f"])
     }
-    async listener(){
+    async listener(){3
         while (this.active){
             let json = await this.post('/update')
             this.update_graph(this.cpu_Graph,json["cpu_usage"].map(val => parseFloat(val)))
@@ -65,15 +65,38 @@ class Client{
         tile.classList.toggle("is-hidden")
     }
 
-    create_line_graph(ctx_id, sets_name, fill = false){
+    create_line_graph(ctx_id, sets_name, percentage = false){
         let ctx = document.getElementById(ctx_id).getContext('2d')
         let sets = []
         sets_name.forEach(name => {
+            let color = ColorGenerator.get_new_color()
             sets.push({label: name,data: [],
-                backgroundColor: ['rgba(0,0,0,0)'],
-                borderColor: [ColorGenerator.get_new_color()],
+                backgroundColor: [color],
+                borderColor: [color],
                 borderWidth: 3,
-                fill: fill
+                fill: false,
+            })
+        });
+        let options = {
+            responsive: true,
+            elements: {line: {tension: 0}},
+        }
+        if(percentage)options.scales = {yAxes: [{display: true,ticks: {beginAtZero: true,steps: 100,stepValue: 5,max: 100}}]}
+        ColorGenerator.reset()
+        return new Chart(ctx, {type: "line", data: {datasets:sets,},options : options})
+    }
+
+    create_bar_graph(ctx_id, sets_name,){
+        let ctx = document.getElementById(ctx_id).getContext('2d')
+        let sets = []
+        sets_name.forEach(name => {
+            let color = ColorGenerator.get_new_color()
+            sets.push({label: name,data: [],
+                backgroundColor: [color],
+                borderColor: [color],
+                borderWidth: 3,
+                fill: true,
+                steppedLine: 'middle',
             })
         });
         let options = {
@@ -86,15 +109,10 @@ class Client{
 
     create_pie_graph(ctx_id, sets_name, colors){
         let ctx = document.getElementById(ctx_id).getContext('2d')
-        let sets = []
-        sets_name.forEach(name => {
-            sets.push({label: name,data: [],
-                backgroundColor: [colors.shift()],
-                borderWidth: 1,
-            })
-        });
-        return new Chart(ctx, {type: "doughnut",data: {datasets:sets,},
-            options : {responsive: true, rotation: 1 * Math.PI, circumference: 1 * Math.PI,}
+        let sets = sets_name.map(function(){return 0})
+        return new Chart(ctx, {type: "pie",
+            data: {datasets:[{data:sets, backgroundColor: colors}],labels: sets_name},
+            options : {responsive: true, rotation: 1 * Math.PI, circumference: 1 * Math.PI}
         })
     }
 
@@ -125,9 +143,21 @@ function randColor(){
     }
     return color;
 }
+function resizeCanvas(){
+    let canvas = document.getElementsByTagName("canvas")
+    for(let x = 0; x < canvas.length; x++)canvas[x].style.setProperty('heigth','400px')
+    console.log("resized")
+}
+function pause(){
+    client.active = !client.active;
+    toggle("pause-button", "pulsing");
+    if(client.active)client.listener();
+}
 var client;
 async function start_client(){
     client = new Client()
     await client.setup()
-    client.listener()
+    await client.listener()
+    resizeCanvas()
+    document.addEventListener('resize', resizeCanvas)
 }

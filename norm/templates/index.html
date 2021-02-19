@@ -14,8 +14,8 @@
     <body onload="start_client()" class="white">
         <nav class="navbar is-primary gradient" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                    <figure class="image is-64x64 m-3">
-                        <img class="is-rounded" height="100px" width="100px" src="{{ url_for('static', filename='media/icon.jpg') }}">
+                    <figure class="image is-64x64 m-3" onclick="pause()">
+                        <img id="pause-button" class="is-rounded" height="100px" width="100px" src="{{ url_for('static', filename='media/icon.jpg') }}">
                     </figure>
                     <a role="button" class="navbar-burger mr-3 mt-2" aria-label="menu" aria-expanded="false" data-target="navbar-selectors">
                         <span aria-hidden="true"></span>
@@ -51,7 +51,7 @@
                     </p>
                     <p class="subtitle">
                         <p class="content" id="temps">Temps</p>
-                        <canvas id="temp_graph" width="80%" height="15%"></canvas>
+                        <canvas id="temp_graph" width="80%" height="20%" ></canvas>
                     </p>
             </section>
             <section class="section">
@@ -60,7 +60,7 @@
                     </p>
                     <p class="subtitle">
                         <p class="content" id="ram">RAM</p>
-                        <canvas id="ram_graph" width="80%" height="15%"></canvas>
+                        <canvas id="ram_graph" width="80%" height="20%" ></canvas>
                     </p>
             </section>
             <section class="section">
@@ -69,7 +69,7 @@
                     </p>
                     <p class="subtitle">
                         <p class="content" id="disk">Disk</p>
-                        <canvas id="disk_graph" width="80%" height="15%"></canvas>
+                        <canvas id="disk_graph" width="80%" height="20%" ></canvas>
                     </p>
             </section>
             <section class="section">
@@ -78,7 +78,7 @@
                     </p>
                     <p class="subtitle">
                         <p class="content" id="Net">Net</p>
-                        <canvas id="net_graph" width="80%" height="15%"></canvas>
+                        <canvas id="net_graph" width="80%" height="20%"></canvas>
                     </p>
             </section>
         </div>
