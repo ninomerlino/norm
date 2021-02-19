@@ -52,6 +52,7 @@ def setup() -> dict :
     output['ram'] = ram_dimension()
     output['net'] = net_addr()
     output['disk'] = disk_dimension()
+    output["temp"] = temp()
     return output
 
 def dynamic() -> dict :
