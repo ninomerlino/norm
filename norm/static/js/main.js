@@ -91,6 +91,7 @@ class Client{
             responsive: true,
             elements: {line: {tension: 0}},
         }
+        ColorGenerator.reset()
         return new Chart(ctx, {type: "line", data: {datasets:sets,},options : options})
     }
 
@@ -103,7 +104,7 @@ class Client{
                 borderWidth: 1,
             })
         });
-        return new Chart(ctx, {type: "pie",data: {datasets:sets,},
+        return new Chart(ctx, {type: "doughnut",data: {datasets:sets,},
             options : {responsive: true, rotation: 1 * Math.PI, circumference: 1 * Math.PI,}
         })
     }
