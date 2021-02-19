@@ -15,9 +15,9 @@ class Client{
     static max_rate = 10000
     static min_rate = 500
     constructor(){
-        this.rate = 750
+        this.rate = 500
         this.active = true
-        this.buffer_size = 20 
+        this.buffer_size = 30 
         this.static_data = {}
         this.cpu_Graph = null
         this.ram_Graph = null
@@ -86,7 +86,7 @@ class Client{
         return new Chart(ctx, {type: "line", data: {datasets:sets,},options : options})
     }
 
-    create_bar_graph(ctx_id, sets_name,){
+    create_bar_graph(ctx_id, sets_name, percentage = false){
         let ctx = document.getElementById(ctx_id).getContext('2d')
         let sets = []
         sets_name.forEach(name => {
@@ -103,6 +103,7 @@ class Client{
             responsive: true,
             elements: {line: {tension: 0}},
         }
+        if(percentage)options.scales = {yAxes: [{display: true,ticks: {beginAtZero: true,steps: 100,stepValue: 5,max: 100}}]}
         ColorGenerator.reset()
         return new Chart(ctx, {type: "line", data: {datasets:sets,},options : options})
     }
