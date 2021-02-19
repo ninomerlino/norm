@@ -15,9 +15,9 @@ class Client{
     static max_rate = 10000
     static min_rate = 500
     constructor(){
-        this.rate = 500
+        this.rate = 1000
         this.active = true
-        this.buffer_size = 30 
+        this.buffer_size = 30
         this.static_data = {}
         this.cpu_Graph = null
         this.ram_Graph = null
@@ -144,21 +144,23 @@ function randColor(){
     }
     return color;
 }
-function resizeCanvas(){
-    let canvas = document.getElementsByTagName("canvas")
-    for(let x = 0; x < canvas.length; x++)canvas[x].style.setProperty('heigth','400px')
-    console.log("resized")
-}
 function pause(){
     client.active = !client.active;
     toggle("pause-button", "pulsing");
     if(client.active)client.listener();
+}
+function change_update_rate(index){
+    let button = document.getElementById("rate-selector").children[index]
+    client.rate = parseInt(button.innerText.replace('ms',''))
+    let old_button = document.getElementsByClassName("is-last-speed")[0]
+    old_button.classList.remove("is-last-speed")
+    old_button.classList.add("is-outlined")
+    button.classList.remove("is-outlined")
+    button.classList.add("is-last-speed")
 }
 var client;
 async function start_client(){
     client = new Client()
     await client.setup()
     await client.listener()
-    resizeCanvas()
-    document.addEventListener('resize', resizeCanvas)
 }
