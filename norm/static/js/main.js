@@ -154,8 +154,8 @@ class Client{
     }
     scale_byte(num){
         let dims = ["byte", "KB","MB","GB","TB","PB"];
-        while(num > 1024){
-            num /= 1024;
+        while(num > 1000){
+            num /= 1000;
             dims.shift();
         }
         return Math.round(num*100)/100 + dims[0]
