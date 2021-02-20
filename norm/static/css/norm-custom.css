@@ -1,13 +1,12 @@
-::-webkit-scrollbar {
-    width: 5px;
-  }
-
+::-webkit-scrollbar{
+	width: 1px;
+	color: #00e1f8;
+}
+:root{
+	scrollbar-width: 3px;
+}
 .white{
 	background-color: #ffffff;
-}
-
-.bold-text{
-  font-weight: bold;
 }
 
 .gradient{

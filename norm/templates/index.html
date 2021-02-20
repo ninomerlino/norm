@@ -21,26 +21,26 @@
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
-                      </a>
-              </div>
-              <div id="navbar-selectors" class="navbar-menu">
-                  <div id="selector" class="navbar-end">
-                    <a class="navbar-item level-item button is-rounded is-success m-4 is-small" onclick="client.toggle_field(0)">CPU</a>
-                    <a class="navbar-item level-item button is-rounded is-success m-4 is-small" onclick="client.toggle_field(1)">TEMPERATURE</a>
-                    <a class="navbar-item level-item button is-rounded is-success m-4 is-small" onclick="client.toggle_field(2)">RAM</a>
-                    <a class="navbar-item level-item button is-rounded is-success m-4 is-small" onclick="client.toggle_field(3)">DISK</a>
-                    <a class="navbar-item level-item button is-rounded is-success m-4 is-small" onclick="client.toggle_field(4)">NETWORK</a>
-                  </div>
-              </div>
-          </nav>
+                    </a>
+            </div>
+        </nav>
           <!-- navbar -->
           <div class="level">
-              <div id="rate-selector" class="level-left pt-3 pl-3">
-                <button class="level-item button is-primary is-outlined is-small" onclick="change_update_rate(0)"c>500ms</button>
-                <button class="level-item button is-primary is-last-speed is-small" onclick="change_update_rate(1)">1000ms</button>
-                <button class="level-item button is-primary is-outlined is-small" onclick="change_update_rate(2)" >1500ms</button>
-                <button class="level-item button is-primary is-outlined is-small" onclick="change_update_rate(3)" >2000ms</button>
-              </div>
+            <div class="level-left pt-3 pl-3"><div class="level-item tabs is-toggle is-toggle-rounded">
+                <ul id="rate-selector">
+                    <li onclick="client.change_update_rate(0)"><a>500ms</a></li>
+                    <li class="is-active" onclick="client.change_update_rate(1)"><a>1000ms</a></li>
+                    <li onclick="client.change_update_rate(2)"><a>1500ms</a></li>
+                    <li onclick="client.change_update_rate(3)"><a>2000ms</a></li>
+                </ul>
+            </div></div>
+            <div class="level-right pt-3 pr-3"><div id="selector"  class="buttons has-addons">
+                <a class="navbar-item level-item button is-success" onclick="client.toggle_field(0)">CPU</a>
+                <a class="navbar-item level-item button is-success" onclick="client.toggle_field(1)">TEMPERATURE</a>
+                <a class="navbar-item level-item button is-success" onclick="client.toggle_field(2)">RAM</a>
+                <a class="navbar-item level-item button is-success" onclick="client.toggle_field(3)">DISK</a>
+                <a class="navbar-item level-item button is-success" onclick="client.toggle_field(4)">NETWORK</a>
+            </div></div>
           </div>
           <!-- level -->
         <div>
@@ -49,7 +49,8 @@
                         CPU
                     </p>
                     <p class="subtitle">
-                        <p class="content" id="cpu">CPU</p>
+                        <nav id="core-info" class="level">
+                        </nav>
                         <canvas id="cpu_graph" width="80%" height="20%"></canvas>
                     </p>
             </section>

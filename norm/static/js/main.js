@@ -64,7 +64,13 @@ class Client{
         let tile = document.getElementsByClassName("section")[index];
         tile.classList.toggle("is-hidden")
     }
-
+    change_update_rate(index){
+        let button = document.getElementById("rate-selector").children[index]
+        this.rate = parseInt(button.innerText.replace('ms',''))
+        let old_button = document.getElementById("rate-selector").getElementsByClassName("is-active")[0]
+        old_button.classList.remove("is-last-speed", "is-active")
+        button.classList.add("is-last-speed", "is-active")
+    }
     create_line_graph(ctx_id, sets_name, percentage = false){
         let ctx = document.getElementById(ctx_id).getContext('2d')
         let sets = []
@@ -107,7 +113,6 @@ class Client{
         ColorGenerator.reset()
         return new Chart(ctx, {type: "line", data: {datasets:sets,},options : options})
     }
-
     create_pie_graph(ctx_id, sets_name, colors){
         let ctx = document.getElementById(ctx_id).getContext('2d')
         let sets = sets_name.map(function(){return 0})
@@ -116,7 +121,6 @@ class Client{
             options : {responsive: true, rotation: 1 * Math.PI, circumference: 1 * Math.PI}
         })
     }
-
     update_graph(graph, values){
         for(let x = 0; x < values.length; x++){
             graph.data.datasets[x].data.push(values[x])}
@@ -126,8 +130,21 @@ class Client{
             graph.data.labels.shift("")}
         graph.update()
     }
-    generate_cpu_core(){
-
+    generate_cpu_cores(){
+        let cpu = this.static_data.cpu
+        let base = document.getElementById("core-info")
+        let html = ""
+        for(var core in cpu){
+            html += `<div class="level-item has-text-justified"><div>
+            <p class="title is-4">`+core+`</p>
+            <p class="heading">
+            <span class="is-family-code"><span class="has-text-danger">▲</span> 34 GHz</span><br>
+            <span class="is-family-code"><span class="has-text-success">▼</span> 1 GHz</span></p></div>`
+        }
+        
+    }
+    scale_freq(){
+        
     }
 }
 //indipendent function
@@ -148,15 +165,6 @@ function pause(){
     client.active = !client.active;
     toggle("pause-button", "pulsing");
     if(client.active)client.listener();
-}
-function change_update_rate(index){
-    let button = document.getElementById("rate-selector").children[index]
-    client.rate = parseInt(button.innerText.replace('ms',''))
-    let old_button = document.getElementsByClassName("is-last-speed")[0]
-    old_button.classList.remove("is-last-speed")
-    old_button.classList.add("is-outlined")
-    button.classList.remove("is-outlined")
-    button.classList.add("is-last-speed")
 }
 var client;
 async function start_client(){
