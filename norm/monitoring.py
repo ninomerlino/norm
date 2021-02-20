@@ -3,6 +3,8 @@ import platform
 import subprocess
 import json
 
+prev_data = {}
+
 def env_info():
     system = platform.system()
     os = platform.node()
@@ -51,14 +53,20 @@ def net_addr():
     interfaces = psutil.net_if_addrs()
     output = {}
     for interface in interfaces.keys():
-        output[interface] = interfaces[interface][0][1]
+        output[interface + "(sent)"] = interfaces[interface][0][1]
+        output[interface + "(recv)"] = interfaces[interface][0][1]
     return output
 
 def net_speed():
-    interfaces = psutil.net_if_stats()
+    global prev_data
+    interfaces = psutil.net_io_counters(pernic=True,nowrap=False)
     output = {}
     for interface in interfaces.keys():
-        output[interface] = interfaces[interface][2]
+        output[interface + "(sent)"] = interfaces[interface][2] - prev_data[interface]["sent"]
+        output[interface + "(recv)"] = interfaces[interface][3] - prev_data[interface]["recv"]
+        prev_data[interface]["sent"] = interfaces[interface][2]
+        prev_data[interface]["recv"] = interfaces[interface][3]
+
     return output
 
 def disk_dimension():
@@ -70,6 +78,12 @@ def disk_usage():
     return disk[3]
 
 def setup() -> dict :
+    global prev_data
+    tmp = psutil.net_io_counters(pernic=True)
+    for interface in tmp.keys():
+        prev_data[interface] = {} 
+        prev_data[interface]["sent"] = tmp[interface][2]
+        prev_data[interface]["recv"] = tmp[interface][3]
     psutil.cpu_percent(percpu=True) #non sono pazzo ci serve qua
     output = {}
     output['cpu'] = cpu_freq()
