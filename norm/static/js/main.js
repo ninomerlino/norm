@@ -132,19 +132,19 @@ class Client{
     }
     generate_cpu_cores(){
         let cpu = this.static_data.cpu
-        let base = document.getElementById("core-info")
         let html = ""
         for(var core in cpu){
             html += `<div class="level-item has-text-justified"><div>
             <p class="title is-4">`+core+`</p>
             <p class="heading">
-            <span class="is-family-code"><span class="has-text-danger">▲</span> 34 GHz</span><br>
-            <span class="is-family-code"><span class="has-text-success">▼</span> 1 GHz</span></p></div>`
+            <span class="is-family-code"><span class="has-text-danger">▲</span>`+this.scale_freq(cpu[core][0])+`</span><br>
+            <span class="is-family-code"><span class="has-text-success">▼</span>`+this.scale_freq(cpu[core][0])+`</span></p></div>`
         }
-        
+        document.getElementById("core-info").innerHTML = html;
     }
-    scale_freq(){
-        
+    scale_freq(freq){
+        if(freq > 1000)parseInt(freq/1000) + "GHz";
+        freq + "MHz";
     }
 }
 //indipendent function

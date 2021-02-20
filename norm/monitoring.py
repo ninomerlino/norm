@@ -1,7 +1,7 @@
 import psutil
 
 def cpu_usage():
-    cpu = psutil.cpu_percent(0.3, percpu=True)
+    cpu = psutil.cpu_percent(percpu=True)#senza un intervallo conta le prestazioni dall'ultima chiamata
     return cpu
 
 def cpu_freq():
@@ -55,6 +55,7 @@ def disk_usage():
     return disk[3]
 
 def setup() -> dict :
+    psutil.cpu_percent(percpu=True) #non sono pazzo ci serve qua
     output = {}
     output['cpu'] = cpu_freq()
     output['ram'] = ram_dimension()
