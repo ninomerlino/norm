@@ -1,4 +1,19 @@
 import psutil
+import platform
+import subprocess
+import json
+
+def env_info():
+    system = platform.system()
+    os = platform.node()
+    if "Windows" in system:
+        proc = platform.processor()
+    elif "Linux" in system:
+        proc = json.loads(subprocess.check_output(["lscpu","-J"]))["lscpu"]
+        proc = proc[13]['data'] + " from " + proc[10]["data"]
+    elif "Darwin" in system:
+        proc = "Do you use apple? Cringe bro"
+    return {"OS":os, "system":system, "proc":proc} 
 
 def cpu_usage():
     cpu = psutil.cpu_percent(percpu=True)#senza un intervallo conta le prestazioni dall'ultima chiamata
@@ -62,6 +77,7 @@ def setup() -> dict :
     output['net'] = net_addr()
     output['disk'] = disk_dimension()
     output["temp"] = termal_sensors()
+    output['env'] = env_info()
     return output
 
 def dynamic() -> dict :

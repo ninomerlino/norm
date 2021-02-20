@@ -35,11 +35,17 @@ class Client{
     }
     async setup(){
         this.static_data = await this.post('/setup')
+        this.generate_cpu_cores()
         this.cpu_Graph = this.create_line_graph('cpu_graph', Object.keys(client.static_data.cpu), true)
         this.ram_Graph = this.create_bar_graph('ram_graph', ["ram"], true)
         this.net_Graph = this.create_line_graph('net_graph', Object.keys(this.static_data.net))
         this.temp_Graph = this.create_line_graph('temp_graph', this.static_data.temp)
         this.disk_Graph = this.create_pie_graph('disk_graph', ["used","free"], ["#ec1944", "#33ca7f"])
+        document.getElementById('platform').innerText = this.static_data.env.system;
+        document.getElementById('os').innerText = this.static_data.env.OS;
+        document.getElementById('proc').innerText = this.static_data.env.proc;
+        document.getElementById('tram').innerText = this.scale_byte(this.static_data.ram);
+        document.getElementById('tdisk').innerText = this.scale_byte(this.static_data.disk);
     }
     async listener(){3
         while (this.active){
@@ -134,17 +140,25 @@ class Client{
         let cpu = this.static_data.cpu
         let html = ""
         for(var core in cpu){
-            html += `<div class="level-item has-text-justified"><div>
+            html += `<div class="level-item has-text-justified mr-4 ml-4"><div>
             <p class="title is-4">`+core+`</p>
             <p class="heading">
             <span class="is-family-code"><span class="has-text-danger">▲</span>`+this.scale_freq(cpu[core][0])+`</span><br>
-            <span class="is-family-code"><span class="has-text-success">▼</span>`+this.scale_freq(cpu[core][0])+`</span></p></div>`
+            <span class="is-family-code"><span class="has-text-success">▼</span>`+this.scale_freq(cpu[core][1])+`</span></p></div>`
         }
         document.getElementById("core-info").innerHTML = html;
     }
     scale_freq(freq){
-        if(freq > 1000)parseInt(freq/1000) + "GHz";
-        freq + "MHz";
+        if(freq > 1000)return (freq/1000) + "GHz";
+        return freq + "MHz";
+    }
+    scale_byte(num){
+        let dims = ["byte", "KB","MB","GB","TB","PB"];
+        while(num > 1024){
+            num /= 1024;
+            dims.shift();
+        }
+        return Math.round(num*100)/100 + dims[0]
     }
 }
 //indipendent function

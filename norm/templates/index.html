@@ -34,6 +34,9 @@
                     <li onclick="client.change_update_rate(3)"><a>2000ms</a></li>
                 </ul>
             </div></div>
+            <p  class="level-item" >OS : <span id="os" class="mr-1 ml-1 has-text-primary"></span><span> on platform </span>
+                <span id="platform" class="ml-1 has-text-info"></span>
+            </p>
             <div class="level-right pt-3 pr-3"><div id="selector"  class="buttons has-addons">
                 <a class="navbar-item level-item button is-success" onclick="client.toggle_field(0)">CPU</a>
                 <a class="navbar-item level-item button is-success" onclick="client.toggle_field(1)">TEMPERATURE</a>
@@ -45,36 +48,31 @@
           <!-- level -->
         <div>
             <section class="section">
-                    <p class="title">
-                        CPU
-                    </p>
+                    <p class="title">CPU</p>
                     <p class="subtitle">
+                        <p>Model :<span id="proc"></span></p>
                         <nav id="core-info" class="level">
                         </nav>
                         <canvas id="cpu_graph" width="80%" height="20%"></canvas>
                     </p>
             </section>
             <section class="section">
-                    <p class="title">
-                        Temperatures
-                    </p>
+                    <p class="title">Temperatures</p>
                     <p class="subtitle">
                         <canvas id="temp_graph" width="80%" height="20%" ></canvas>
                     </p>
             </section>
             <section class="section">
-                    <p class="title">
-                        RAM
-                    </p>
+                    <p class="title">RAM</p>
                     <p class="subtitle">
+                        <p>Total : <span id="tram"></span></p>
                         <canvas id="ram_graph" width="80%" height="20%" ></canvas>
                     </p>
             </section>
             <section class="section">
-                    <p class="title">
-                        Disk
-                    </p>
+                    <p class="title">Disk</p>
                     <p class="subtitle">
+                        <p>Total : <span id="tdisk"></span></p>
                         <canvas id="disk_graph" width="80%" height="20%" ></canvas>
                     </p>
             </section>
