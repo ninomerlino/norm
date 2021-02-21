@@ -1,7 +1,7 @@
+import json
 import psutil
 import platform
 import subprocess
-import json
 
 prev_data = {}
 

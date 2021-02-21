@@ -14,7 +14,7 @@
     <body onload="start_client()" class="white">
         <nav class="navbar is-primary gradient" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                    <figure class="image is-64x64 m-3" onclick="pause()">
+                    <figure class="image is-64x64 m-3" onclick="client.pause()">
                         <img id="pause-button" class="is-rounded" height="100px" width="100px" src="{{ url_for('static', filename='media/icon.jpg') }}">
                     </figure>
                     <a role="button" class="navbar-burger mr-3 mt-2" aria-label="menu" aria-expanded="false" data-target="navbar-selectors">
@@ -26,7 +26,7 @@
         </nav>
           <!-- navbar -->
           <div class="level">
-            <div class="level-left pt-3 pl-3"><div class="level-item tabs is-toggle is-toggle-rounded">
+            <div class="level-left pt-3 pl-3 pr-3"><div class="level-item tabs is-toggle is-toggle-rounded">
                 <ul id="rate-selector">
                     <li onclick="client.change_update_rate(0)"><a>500ms</a></li>
                     <li class="is-active" onclick="client.change_update_rate(1)"><a>1000ms</a></li>

@@ -25,6 +25,11 @@ class Client{
         this.ram_Graph = null
         this.disk_Graph = null
     }
+    pause(){
+        this.active = !this.active;
+        toggle("pause-button", "pulsing");
+        if(this.active)this.listener();
+    }
     async post(url, data = []){
         let response = await fetch(url , {
         method:'POST',
@@ -37,17 +42,17 @@ class Client{
         this.static_data = await this.post('/setup')
         this.generate_cpu_cores()
         this.cpu_Graph = this.create_line_graph('cpu_graph', Object.keys(client.static_data.cpu), true)
-        this.ram_Graph = this.create_bar_graph('ram_graph', ["ram"], true)
+        this.ram_Graph = this.create_line_graph('ram_graph', ["ram"], true, true)
         this.net_Graph = this.create_line_graph('net_graph', Object.keys(this.static_data.net))
         this.temp_Graph = this.create_line_graph('temp_graph', this.static_data.temp)
-        this.disk_Graph = this.create_pie_graph('disk_graph', ["used","free"], ["#ec1944", "#33ca7f"])
+        this.disk_Graph = this.create_pie_graph('disk_graph', ["used","free"], ["#f95c5c", "#99eb2f"])
         document.getElementById('platform').innerText = this.static_data.env.system;
         document.getElementById('os').innerText = this.static_data.env.OS;
         document.getElementById('proc').innerText = this.static_data.env.proc;
         document.getElementById('tram').innerText = this.scale_byte(this.static_data.ram);
         document.getElementById('tdisk').innerText = this.scale_byte(this.static_data.disk);
     }
-    async listener(){3
+    async listener(){
         while (this.active){
             let json = await this.post('/update', [document.getElementById("proc_input").value])
             this.update_graph(this.cpu_Graph,json["cpu_usage"].map(val => parseFloat(val)))
@@ -82,7 +87,7 @@ class Client{
         old_button.classList.remove("is-last-speed", "is-active")
         button.classList.add("is-last-speed", "is-active")
     }
-    create_line_graph(ctx_id, sets_name, percentage = false){
+    create_line_graph(ctx_id, sets_name, percentage = false, fill=false){
         let ctx = document.getElementById(ctx_id).getContext('2d')
         let sets = []
         sets_name.forEach(name => {
@@ -91,29 +96,7 @@ class Client{
                 backgroundColor: [color],
                 borderColor: [color],
                 borderWidth: 3,
-                fill: false,
-            })
-        });
-        let options = {
-            responsive: true,
-            elements: {line: {tension: 0}},
-        }
-        if(percentage)options.scales = {yAxes: [{display: true,ticks: {beginAtZero: true,steps: 100,stepValue: 5,max: 100}}]}
-        ColorGenerator.reset()
-        return new Chart(ctx, {type: "line", data: {datasets:sets,},options : options})
-    }
-
-    create_bar_graph(ctx_id, sets_name, percentage = false){
-        let ctx = document.getElementById(ctx_id).getContext('2d')
-        let sets = []
-        sets_name.forEach(name => {
-            let color = ColorGenerator.get_new_color()
-            sets.push({label: name,data: [],
-                backgroundColor: [color],
-                borderColor: [color],
-                borderWidth: 3,
-                fill: true,
-                steppedLine: 'middle',
+                fill: fill,
             })
         });
         let options = {
@@ -169,21 +152,6 @@ class Client{
 //indipendent function
 function toggle(idname, classname){
     document.getElementById(idname).classList.toggle(classname);
-}
-function updateLastdata(idname, value){
-    document.getElementById(idname).innerText = idname + " : " + value;
-}
-function randColor(){
-    let color = "";
-    while (color == reserved_color || color == "") {
-        color = "#" + Math.floor(Math.random()*16777215).toString(16);
-    }
-    return color;
-}
-function pause(){
-    client.active = !client.active;
-    toggle("pause-button", "pulsing");
-    if(client.active)client.listener();
 }
 var client;
 async function start_client(){
