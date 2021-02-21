@@ -5,6 +5,19 @@ import json
 
 prev_data = {}
 
+def process_list(proc_name):
+    all_process = subprocess.check_output(["ps","-e","-o","command"]).decode("UTF-8").split("\n")
+    output = []
+    for process in  all_process:
+        if proc_name in process:
+            output.append(process)
+    i = 0
+    while i < len(output):
+        if len(output[i])>200:
+            output[i] = output[i][:200]+" {...}"
+        i+=1
+    return output
+
 def env_info():
     system = platform.system()
     os = platform.node()
@@ -94,11 +107,12 @@ def setup() -> dict :
     output['env'] = env_info()
     return output
 
-def dynamic() -> dict :
+def dynamic(process) -> dict :
     output = {}
     output["cpu_usage"] = cpu_usage()
     output["temp"] = temp()
     output["ram"] = ram_usage()
     output["disk_usage"] = disk_usage()
     output["net_speed"] = net_speed()
+    output["process_list"] = process_list(process)
     return output

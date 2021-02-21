@@ -11,7 +11,8 @@ def index():
 
 @app.route('/update', methods = ['POST'])
 def update():
-    return monitoring.dynamic()
+    data = request.data.decode("UTF-8")[2:-2]
+    return monitoring.dynamic(data)
 
 @app.route('/setup', methods = ['POST'])
 def setup():
