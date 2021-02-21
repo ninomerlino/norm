@@ -45,14 +45,14 @@ class Client{
         this.ram_Graph = this.create_line_graph('ram_graph', ["ram"], true, true)
         this.net_Graph = this.create_line_graph('net_graph', Object.keys(this.static_data.net))
         this.temp_Graph = this.create_line_graph('temp_graph', this.static_data.temp)
-        this.disk_Graph = this.create_pie_graph('disk_graph', ["used","free"], ["#ec1944", "#33ca7f"])
+        this.disk_Graph = this.create_pie_graph('disk_graph', ["used","free"], ["#f95c5c", "#99eb2f"])
         document.getElementById('platform').innerText = this.static_data.env.system;
         document.getElementById('os').innerText = this.static_data.env.OS;
         document.getElementById('proc').innerText = this.static_data.env.proc;
         document.getElementById('tram').innerText = this.scale_byte(this.static_data.ram);
         document.getElementById('tdisk').innerText = this.scale_byte(this.static_data.disk);
     }
-    async listener(){3
+    async listener(){
         while (this.active){
             let json = await this.post('/update')
             this.update_graph(this.cpu_Graph,json["cpu_usage"].map(val => parseFloat(val)))
