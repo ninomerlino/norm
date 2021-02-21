@@ -8,7 +8,10 @@ Norm allows you to monitor your computer basic statistics over the network it wa
 
 ## Launch Norm
 
-// launch instruction
+ - Linux (from inside norm folder):
+    - python3 main.py FLAGS
+ - Windows (from inside norm folder):
+    - python main.py FLAGS
 
  - -h [host] where **host** is the address of the device on the network you want norm available 
  > **note** : without the host specification norm will be available on all network the device is part of
@@ -23,4 +26,4 @@ On the norm client you can:
 - Select the section you want to focus on *es: cpu, network, ram*
 - Pause the monitoring by clicking the norm logo on the top
 - Select with part of the graph you want to se
-- change the sampling speed form 2*s* up to 0.5*s* 
+- change the sampling speed form 0.5*s* up to 2*s* 

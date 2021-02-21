@@ -1,5 +1,5 @@
 from sys import argv
-from .routes import app
+from norm.routes import app
 
 def flag_check(flag : str, default):
     if flag in argv:
