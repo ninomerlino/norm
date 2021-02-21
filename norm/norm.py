@@ -30,4 +30,4 @@ if __name__ == '__main__':
     debug = False
     if '-d' in argv:
         debug = True
-    app.run(host=host, port=int(port), debug=debug)
+    app.run(host=host, port=int(port), debug=debug, ssl_context='adhoc')

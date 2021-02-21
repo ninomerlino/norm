@@ -15,7 +15,7 @@ Norm allows you to monitor your computer basic statistics over the network it wa
  - -p [port] where **port** is the number of the port norm uses for his web service
  > **note** : without the port specification norm will use the 5000 port
 
-Norm client will be available on http://[*host*]:[*port*] please notice norm uses **http** protocol
+Norm client will be available on http://[*host*]:[*port*] please notice norm uses **http** protocol, norm client uses https but it certificates himself so your browser will very probably display a warning
 
 ## Norm features
 
