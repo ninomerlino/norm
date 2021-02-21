@@ -15,5 +15,9 @@ workers = flag_check('-w',1)
 debug = False
 if '-d' in argv:
     debug = True
+if '-ns' in argv:
+    ssl = None
+else:
+    sll = 'adhoc'
 
-run_simple(application=app, hostname=host, port=int(port), use_debugger=debug, ssl_context='adhoc', processes=int(workers))
+run_simple(application=app, hostname=host, port=int(port), use_debugger=debug, ssl_context=ssl, processes=int(workers))

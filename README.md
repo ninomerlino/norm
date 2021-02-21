@@ -17,8 +17,11 @@ Norm allows you to monitor your computer basic statistics over the network it wa
  > **note** : without the host specification norm will be available on all network the device is part of
  - -p [port] where **port** is the number of the port norm uses for his web service
  > **note** : without the port specification norm will use the 5000 port
+ - -w if you wanna specify the number of workers, more than one is reccomended if you want to use multiple client at the same time
+ - -ns to remove https protocol and use only http protocol
+ > **note** : the information will be visible to all people in the lan
 
-Norm client will be available on http://[*host*]:[*port*] please notice norm uses **http** protocol, norm client uses https but it certificates himself so your browser will very probably display a warning
+Norm client will be available on https://[*host*]:[*port*] or http://[*host*]:[*port*] please notice norm uses **http** protocol, norm client uses https but it certificates himself so your browser will very probably display a warning
 
 ## Norm features
 
