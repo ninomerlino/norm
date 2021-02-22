@@ -54,18 +54,13 @@ class Client{
     }
     async listener(){
         while (this.active){
-            let json = await this.post('/update', [document.getElementById("proc_input").value])
+            let json = await this.post('/update')
             this.update_graph(this.cpu_Graph,json["cpu_usage"].map(val => parseFloat(val)))
             this.update_graph(this.ram_Graph, [parseFloat(json["ram"])])
             this.update_graph(this.net_Graph, Object.values(json["net_speed"]).map(val => parseFloat(val)))
             this.update_graph(this.temp_Graph, Object.values(json["temp"]).map(val => parseFloat(val)))
             this.disk_Graph.data.datasets[0].data = [parseFloat(json["disk_usage"]), 100-parseFloat(json["disk_usage"])] 
-            this.disk_Graph.update()
-            let output = ""
-            for(let i = 0; i < json["process_list"].length;i++){
-                output += "<p>" + json["process_list"][i] + "</p>"
-            }
-            document.getElementById("process_list").innerHTML = output 
+            this.disk_Graph.update() 
             await this.sleep(this.rate)
         }
     }

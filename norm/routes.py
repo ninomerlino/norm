@@ -5,8 +5,19 @@ app = Flask(__name__)
 
 @app.route('/', methods = ['GET'])
 def index():
-    print()
-    return render_template("index.html")
+    if "mobile" in request.headers['user-agent'].lower():
+        return "this is the mobile page trust me"#TODO actualy make a page
+    else:    
+        return render_template("index.html")
+
+@app.route('/process', methods = ['GET','POST'])
+def process():
+    if request.method == 'GET':
+        return render_template("process.html")
+    else:
+        process_name = request.data.decode('UTF-8')
+        print(process_name)
+        return {'proc':monitoring.process_list(process_name)}
 
 @app.route('/update', methods = ['POST'])
 def update():

@@ -18,6 +18,6 @@ if '-d' in argv:
 if '-ns' in argv:
     ssl = None
 else:
-    sll = 'adhoc'
+    ssl = 'adhoc'
 
 run_simple(application=app, hostname=host, port=int(port), use_debugger=debug, ssl_context=ssl, processes=int(workers))

@@ -43,3 +43,10 @@ canvas{
 	padding-left: 10px;
 	padding-right: 10px;
 }
+#process-list{
+	max-height: 100%;
+	overflow: auto;
+	scrollbar-color: black;
+	scrollbar-track-color: rgba(0, 0, 0, 0);
+	scrollbar-width: 10px;
+}

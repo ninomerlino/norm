@@ -4,19 +4,7 @@ import platform
 import subprocess
 
 prev_data = {}
-
-def process_list(proc_name):
-    all_process = subprocess.check_output(["ps","-e","-o","command"]).decode("UTF-8").split("\n")
-    output = []
-    for process in  all_process:
-        if proc_name in process:
-            output.append(process)
-    i = 0
-    while i < len(output):
-        if len(output[i])>200:
-            output[i] = output[i][:200]+" {...}"
-        i+=1
-    return output
+max_process_name = 100
 
 def env_info():
     system = platform.system()
@@ -90,6 +78,10 @@ def disk_usage():
     disk = psutil.disk_usage("/")
     return disk[3]
 
+def create_process_dict(string):
+    col = list(filter(lambda x: x!='', string.strip().split(" ")))
+    return {'pid':col[0], 'user':col[1], 'time':col[2], 'cmd':col[3][:max_process_name]}
+
 def setup() -> dict :
     global prev_data
     tmp = psutil.net_io_counters(pernic=True)
@@ -107,12 +99,20 @@ def setup() -> dict :
     output['env'] = env_info()
     return output
 
-def dynamic(process) -> dict :
+def dynamic() -> dict :
     output = {}
     output["cpu_usage"] = cpu_usage()
     output["temp"] = temp()
     output["ram"] = ram_usage()
     output["disk_usage"] = disk_usage()
     output["net_speed"] = net_speed()
-    output["process_list"] = process_list(process)
+    return output
+
+def process_list(proc_name):
+    output = []
+    if platform.system() == 'Linux':
+        all_process = subprocess.check_output(["ps","-e","--format","pid,user,time,cmd"]).decode("UTF-8").split("\n")
+        for process in all_process:
+            if proc_name in process and process != '':
+                output.append(create_process_dict(process))
     return output

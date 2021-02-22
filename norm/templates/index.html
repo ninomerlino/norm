@@ -17,11 +17,6 @@
                     <figure class="image is-64x64 m-3" onclick="client.pause()">
                         <img id="pause-button" class="is-rounded" height="100px" width="100px" src="{{ url_for('static', filename='media/icon.jpg') }}">
                     </figure>
-                    <a role="button" class="navbar-burger mr-3 mt-2" aria-label="menu" aria-expanded="false" data-target="navbar-selectors">
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                    </a>
             </div>
         </nav>
           <!-- navbar -->
@@ -46,7 +41,6 @@
             </div></div>
           </div>
           <!-- level -->
-        <div>
             <section class="section">
                     <p class="title">CPU</p>
                     <p class="subtitle">
@@ -84,12 +78,10 @@
                         <canvas id="net_graph" width="80%" height="20%"></canvas>
                     </p>
             </section>
-        </div>
-            <section class="section">
-                    <p class="title">PROCESS LIST</p>
-                    <input id="proc_input"></input>
-                    <p class="content" id="process_list"></p>
-            </section>
-
+            <footer class="footer">
+                <div class="buttons is-pulled-right">
+                    <a href="{{ url_for('process') }}" class="button is-info is-small">Process list</a>
+                </div>
+            </footer>
     </body>
 </html>
