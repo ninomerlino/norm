@@ -18,6 +18,10 @@
                         <img id="pause-button" class="is-rounded" height="100px" width="100px" src="{{ url_for('static', filename='media/icon.jpg') }}">
                     </figure>
             </div>
+            <div id="links" class="navbar-menu"><div class="navbar-start">
+                  <a class="navbar-item" href="{{ url_for('index') }}">Home</a>
+                  <a class="navbar-item" href="{{ url_for('process') }}">Process list</a>
+            </div></div>
         </nav>
           <!-- navbar -->
           <div class="level">
@@ -78,10 +82,5 @@
                         <canvas id="net_graph" width="80%" height="20%"></canvas>
                     </p>
             </section>
-            <footer class="footer">
-                <div class="buttons is-pulled-right">
-                    <a href="{{ url_for('process') }}" class="button is-info is-small">Process list</a>
-                </div>
-            </footer>
     </body>
 </html>

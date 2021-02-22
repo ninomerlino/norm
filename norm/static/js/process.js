@@ -10,7 +10,7 @@ async function generate_table(list){
     html = ""
     list.shift()
     list.forEach(proc => {
-        html += "<tr><td>"+proc.pid+"</td><td>"+proc.user+"</td><td>"+proc.time+"</td><td>"+proc.cmd+"</td></tr>"
+        html += "<tr><td>"+proc.pid+"</td><td>"+proc.user+"</td><td>"+proc.time+"</td><td>"+proc.cmd+"</td><td>"+proc.args+"</td></tr>"
     });
     document.getElementById("process_list").innerHTML = html;
 }
