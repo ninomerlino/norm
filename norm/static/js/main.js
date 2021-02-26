@@ -60,7 +60,7 @@ class Client{
             this.update_graph(this.net_Graph, Object.values(json["net_speed"]).map(val => parseFloat(val)))
             this.update_graph(this.temp_Graph, Object.values(json["temp"]).map(val => parseFloat(val)))
             this.disk_Graph.data.datasets[0].data = [parseFloat(json["disk_usage"]), 100-parseFloat(json["disk_usage"])] 
-            this.disk_Graph.update()
+            this.disk_Graph.update() 
             await this.sleep(this.rate)
         }
     }

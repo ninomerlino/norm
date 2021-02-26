@@ -1,0 +1,52 @@
+<!doctype html>
+
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <link rel="icon" href="{{ url_for('static', filename='media/icon.jpg') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/norm-custom.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/norm-main.css') }}">
+        <script src="{{ url_for('static', filename='js/process.js') }}"></script>
+        <title>Norm</title>
+    </head>
+    <body onload="start_page()" class="white">
+        <nav class="navbar is-primary gradient" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                    <figure class="image is-64x64 m-3">
+                        <a href="{{ url_for('index') }}"><img id="pause-button" class="is-rounded" height="100px" width="100px" src="{{ url_for('static', filename='media/icon.jpg') }}"></a>
+                    </figure>
+            </div>
+            <div id="links" class="navbar-menu"><div class="navbar-start">
+                <a class="navbar-item" href="{{ url_for('index') }}">Home</a>
+                <a class="navbar-item" href="{{ url_for('process') }}">Process list</a>
+            </div></div>
+        </nav>
+        <!-- navbar -->
+        <div class="level p-3">
+            <div class="level-item">
+                <input type="text" class="input is-rounded is-medium mt-6 ml-6 mr-6 mb-1 has-text-centered" id="search_bar">
+            </div>
+        </div>
+        <section class="section">
+            <table class="container table is-family-code white is-striped">
+                <thead><tr>
+                    <th>PID</th>
+                    <th>USER</th>
+                    <th>TIME</th>
+                    <th>COMMAND</th>
+                    <th>ARGS</th>
+                </tr></thead>
+                <tfoot><tr>
+                    <th>PID</th>
+                    <th>USER</th>
+                    <th>TIME</th>
+                    <th>COMMAND</th>
+                    <th>ARGS</th>
+                </tr></tfoot>
+                <tbody id="process_list">
+                </tbody>
+              </table>
+        </section>
+    </body>
+</html>

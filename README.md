@@ -4,14 +4,14 @@ Norm allows you to monitor your computer basic statistics over the network it wa
 
 ## Install Norm
 
-//installation instruction
+ - From *Github* (Linux, Windows, IOS)
+   1. git clone https://github.com/ninomerlino/norm/
 
 ## Launch Norm
 
- - Linux (from inside norm folder):
+ - Github installation (from inside norm folder):
     - python3 main.py FLAGS
- - Windows (from inside norm folder):
-    - python main.py FLAGS
+
 
  - -h [host] where **host** is the address of the device on the network you want norm available 
  > **note** : without the host specification norm will be available on all network the device is part of
@@ -30,3 +30,4 @@ On the norm client you can:
 - Pause the monitoring by clicking the norm logo on the top
 - Select with part of the graph you want to se
 - change the sampling speed form 0.5*s* up to 2*s* 
+- list all process in execution and filter them by pid, user, time of execution or command **ONLY on linux**

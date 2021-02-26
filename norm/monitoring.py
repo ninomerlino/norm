@@ -4,6 +4,7 @@ import platform
 import subprocess
 
 prev_data = {}
+max_process_name = 100
 
 def env_info():
     system = platform.system()
@@ -77,6 +78,13 @@ def disk_usage():
     disk = psutil.disk_usage("/")
     return disk[3]
 
+def create_process_dict(string):
+    col = list(filter(lambda x: x!='', string.strip().split(" ")))
+    args = ""
+    if len(col) > 4:
+        args = " ".join(col[4:])
+    return {'pid':col[0], 'user':col[1], 'time':col[2], 'cmd':col[3][:max_process_name], 'args':args}
+
 def setup() -> dict :
     global prev_data
     tmp = psutil.net_io_counters(pernic=True)
@@ -101,4 +109,13 @@ def dynamic() -> dict :
     output["ram"] = ram_usage()
     output["disk_usage"] = disk_usage()
     output["net_speed"] = net_speed()
+    return output
+
+def process_list(proc_name):
+    output = []
+    if platform.system() == 'Linux':
+        all_process = subprocess.check_output(["ps","-e","--format","pid,user,time,cmd"]).decode("UTF-8").split("\n")
+        for process in all_process:
+            if proc_name in process and process != '':
+                output.append(create_process_dict(process))
     return output
