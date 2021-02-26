@@ -6,7 +6,7 @@ app = Flask(__name__)
 @app.route('/', methods = ['GET'])
 def index():
     if "mobile" in request.headers['user-agent'].lower():
-        return "this is the mobile page trust me"#TODO actualy make a page
+        return render_template("indexMobile.html")
     else:    
         return render_template("index.html")
 
@@ -26,4 +26,3 @@ def update():
 @app.route('/setup', methods = ['POST'])
 def setup():
     return monitoring.setup()
-    
