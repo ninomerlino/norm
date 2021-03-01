@@ -21,13 +21,13 @@ Norm allows you to monitor your computer basic statistics over the network it wa
  - -ns to remove https protocol and use only http protocol
  > **note** : the information will be visible to all people in the lan if -ns is present
 
-Norm client will be available on https://[*host*]:[*port*] or http://[*host*]:[*port*] please notice norm uses **http** protocol, norm client uses https but it certificates himself so your browser will very probably display a warning
+Norm client will be available on https://[*host*]:[*port*] or http://[*host*]:[*port*] when norm client uses https it certificates himself so your browser will very probably display a warning
 
 ## Norm features
 
 On the norm client you can:
 - Select the section you want to focus on *es: cpu, network, ram*
 - Pause the monitoring by clicking the norm logo on the top
-- Select with part of the graph you want to se
+- Select which part of the graph you want to se
 - change the sampling speed form 0.5*s* up to 2*s* 
 - list all process in execution and filter them by pid, user, time of execution or command **ONLY on linux**

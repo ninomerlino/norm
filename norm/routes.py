@@ -5,10 +5,10 @@ app = Flask(__name__)
 
 @app.route('/', methods = ['GET'])
 def index():
+    canvas = "30%"
     if "mobile" in request.headers['user-agent'].lower():
-        return "this is the mobile page trust me"#TODO actualy make a page
-    else:    
-        return render_template("index.html")
+        canvas = "40%"
+    return render_template("index2.html", canvas_height=canvas)
 
 @app.route('/process', methods = ['GET','POST'])
 def process():
@@ -26,4 +26,3 @@ def update():
 @app.route('/setup', methods = ['POST'])
 def setup():
     return monitoring.setup()
-    
