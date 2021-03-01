@@ -4,12 +4,12 @@ Norm allows you to monitor your computer basic statistics over the network it wa
 
 ## Install Norm
 
- - From *Github* (Linux, Windows, IOS)
-   1. git clone https://github.com/ninomerlino/norm/
+ 1. From *Github* (Linux, Windows, IOS)
+    - git clone https://github.com/ninomerlino/norm/
 
 ## Launch Norm
 
- - Github installation (from inside norm folder):
+ 1. Github installation (from inside norm folder):
     - python3 main.py FLAGS
 
 
