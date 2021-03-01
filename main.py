@@ -3,9 +3,10 @@ from norm.routes import app
 from werkzeug.serving import run_simple
 
 def check_dependecies() -> bool:
+    file_path = __file__.replace("main.py","requirements.txt")
     dependecies = None
     run = True
-    with open("requirements.txt","r") as file:
+    with open(file_path,"r") as file:
         dependecies = file.read().split("\n")
     for dep in dependecies:
         if not (dep in modules):
