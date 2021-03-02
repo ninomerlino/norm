@@ -1,4 +1,3 @@
-import json
 import psutil
 import platform
 import subprocess
@@ -12,8 +11,13 @@ def env_info():
     if "Windows" in system:
         proc = platform.processor()
     elif "Linux" in system:
-        proc = json.loads(subprocess.check_output(["lscpu","-J"]))["lscpu"]
-        proc = proc[13]['data'] + " from " + proc[10]["data"]
+        cpuinfo = subprocess.Popen(["cat","/proc/cpuinfo"], stdout=subprocess.PIPE)
+        model = subprocess.check_output(["grep","model\ name","-m1"], stdin=cpuinfo.stdout)
+        proc = model.decode("utf-8").split(": ")[1][:-1]
+        cpuinfo = subprocess.Popen(["cat","/proc/cpuinfo"], stdout=subprocess.PIPE)
+        vendor = subprocess.check_output(["grep","vendor_id","-m1"], stdin=cpuinfo.stdout)
+        if len(vendor) > 0:
+            proc += " from " + vendor.decode("utf-8").split(": ")[1][:-1]
     elif "Darwin" in system:
         proc = "Do you use apple? Cringe bro"
     return {"OS":os, "system":system, "proc":proc} 
