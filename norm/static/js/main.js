@@ -123,7 +123,7 @@ class Client{
         let cpu = this.static_data.cpu
         let html = ""
         for(var core in cpu){
-            html += `<div class="level-item has-text-justified"><div>
+            html += `<div class="level-item has-text-justified m-2"><div>
             <p class="title is-4">`+core+`</p>
             <p class="heading">
             <span class="is-family-code"><span class="has-text-danger">▲</span>`+this.scale_freq(cpu[core][0])+`</span><br>

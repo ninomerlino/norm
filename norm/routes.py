@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/', methods = ['GET'])
 def index():
-    canvas = "30%"
+    canvas = "20%"
     if "mobile" in request.headers['user-agent'].lower():
         canvas = "40%"
     return render_template("index2.html", canvas_height=canvas)
