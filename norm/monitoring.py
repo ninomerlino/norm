@@ -14,10 +14,12 @@ def env_info():
         cpuinfo = subprocess.Popen(["cat","/proc/cpuinfo"], stdout=subprocess.PIPE)
         model = subprocess.check_output(["grep","model\ name","-m1"], stdin=cpuinfo.stdout)
         proc = model.decode("utf-8").split(": ")[1][:-1]
-        cpuinfo = subprocess.Popen(["cat","/proc/cpuinfo"], stdout=subprocess.PIPE)
-        vendor = subprocess.check_output(["grep","vendor_id","-m1"], stdin=cpuinfo.stdout)
-        if len(vendor) > 0:
+        try: 
+            cpuinfo = subprocess.Popen(["cat","/proc/cpuinfo"], stdout=subprocess.PIPE)
+            vendor = subprocess.check_output(["grep","vendor_id","-m1"], stdin=cpuinfo.stdout)
             proc += " from " + vendor.decode("utf-8").split(": ")[1][:-1]
+        except:
+            pass
     elif "Darwin" in system:
         proc = "Do you use apple? Cringe bro"
     return {"OS":os, "system":system, "proc":proc} 
