@@ -4,14 +4,19 @@ Norm allows you to monitor your computer basic statistics over the network it wa
 
 ## Install Norm
 
- 1. From *Github* (Linux, Windows, IOS)
+ 1. From *Github* (Linux, Windows, IOS):
     - git clone https://github.com/ninomerlino/norm/
+
+ 1. From *.deb* package:
+   - download the .deb package from the releases and install it
 
 ## Launch Norm
 
  1. Github installation (from inside norm folder):
     - python3 main.py FLAGS
 
+ 1. From *.deb* package:
+    - norm FLAGS
 
  - -h [host] where **host** is the address of the device on the network you want norm available 
  > **note** : without the host specification norm will be available on all network the device is part of
