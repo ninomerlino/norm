@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="column mr-4 mt-1">
+    <div class="columns">
+        {% for core,value in cores.items() %}
+        <div class="column">
+            <div class="card">
+                <header id="{{ core }}" class="card-header has-background-success" status="success">
+                <p class="card-header-title has-text-center"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M16.25 6c.414 0 .75.336.75.75v9.5c0 .414-.336.75-.75.75h-9.5c-.414 0-.75-.336-.75-.75v-9.5c0-.414.336-.75.75-.75h9.5zm2.75 0c0-1.104-.896-2-2-2h-11c-1.104 0-2 .896-2 2v11c0 1.104.896 2 2 2h11c1.104 0 2-.896 2-2v-11zm-11 14v3h-1v-3h1zm4 0v3h-1v-3h1zm2 0v3h-1v-3h1zm-4 0v3h-1v-3h1zm6 0v3h-1v-3h1zm-8-20v3h-1v-3h1zm4 0v3h-1v-3h1zm2 0v3h-1v-3h1zm-4 0v3h-1v-3h1zm6 0v3h-1v-3h1zm4 15h3v1h-3v-1zm0-4h3v1h-3v-1zm0-2h3v1h-3v-1zm0 4h3v1h-3v-1zm0-6h3v1h-3v-1zm-20 8h3v1h-3v-1zm0-4h3v1h-3v-1zm0-2h3v1h-3v-1zm0 4h3v1h-3v-1zm0-6h3v1h-3v-1z"/></svg>
+                    <span class="corename">{{ core }}</span>
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <p class="has-text-center">
+                            {{ value[1] }}<span class="has-text-success">▲</span>
+                            {{ value[0] }} <span class="has-text-danger">▼ </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title has-text-center">Cpu usage</p>
+                </header>
+                <div id="cpu-content" class="card-content">
+                    <div class="content">
+                        <p >{{ env.proc }}</p>
+                        <div id="cpu_canvas" style="height: 40vh;"></div>
+                    </div>
+                </div>
+                <footer class="card-footer"><a id="hide-cpu-content" class="card-footer-item">hide chart</a></footer>
+            </div>
+        </div>
+        <div class="column is-one-quarter">
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title has-text-center">Storage used space</p>
+                </header>
+                <div id="disk-content" class="card-content">
+                    <div class="content">
+                        <p >Disk size : {{ disk_size }}</p>
+                        <div id="disk_canvas" style="height: 40vh;"></div>
+                    </div>
+                </div>
+                <footer class="card-footer"><a id="hide-disk-content" class="card-footer-item">hide chart</a></footer>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title has-text-center">Network intefaces</p>
+                </header>
+                <div id="interf-content" class="card-content">
+                    <table class="table">
+                        <thead><tr><th>Interface name</th><th>address</th><th>netmask</th></tr></thead>
+                        {% for if,addr in net_setup.items() %}
+                        <tr><td class="is-family-code if-name">{{ if }}</td><td>{{ addr[0] }}</td><td>{{ addr[1] }}</td></tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <footer class="card-footer"><a id="hide-interf-content" class="card-footer-item">hide chart</a></footer>
+            </div>
+        </div>
+        <div class="column">
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title has-text-center">Network traffic</p>
+                </header>
+                <div id="net-content" class="card-content">
+                    <div class="content">
+                        <div id="net_canvas" style="height: 40vh;"></div>
+                    </div>
+                </div>
+                <footer class="card-footer"><a id="hide-net-content" class="card-footer-item">hide chart</a></footer>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var thermal_info = {{ thermal_setup|safe }};
+</script>
+{% endblock %}

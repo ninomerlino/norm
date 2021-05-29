@@ -1,5 +1,5 @@
-Package: norm-monitor
-Version: 1.0.3
+Package: norm
+Version: 2.0.0
 Section: custom
 Priority: optional
 Architecture: all

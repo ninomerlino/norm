@@ -1,0 +1,59 @@
+          <section class="hero">
+            <div class="hero-body">
+                <p  class="title is-size-3 pt-3" >Computer name : <span id="os" class="mr-1 ml-1 has-text-primary"></span><span> on platform </span>
+                    <span id="platform" class="ml-1 has-text-info"></span>
+                </p>
+                <div class="subtitle tabs is-toggle mt-2">
+                    <ul id="rate-selector" class="">
+                        <li onclick="client.change_update_rate(0)"><a>500ms</a></li>
+                        <li class="is-active" onclick="client.change_update_rate(1)"><a>1000ms</a></li>
+                        <li onclick="client.change_update_rate(2)"><a>1500ms</a></li>
+                        <li onclick="client.change_update_rate(3)"><a>2000ms</a></li>
+                    </ul>
+                </div>
+            </div>
+          </section>
+          <div id="selector" class="level buttons has-addons m-1">
+                <a class="navbar-item level-item button is-success" onclick="client.toggle_field(0)">CPU</a>
+                <a class="navbar-item level-item button is-success" onclick="client.toggle_field(1)">TEMPERATURE</a>
+                <a class="navbar-item level-item button is-success" onclick="client.toggle_field(2)">RAM</a>
+                <a class="navbar-item level-item button is-success" onclick="client.toggle_field(3)">DISK</a>
+                <a class="navbar-item level-item button is-success" onclick="client.toggle_field(4)">NETWORK</a>
+          </div>
+          <!-- level -->
+            <section class="section">
+                    <p class="title">CPU</p>
+                    <div class="subtitle">
+                        <p>Model : <span id="proc"></span></p>
+                        <div id="core-info" class="level"></div>
+                        <canvas id="cpu_graph" width="80%" height="{{ canvas_height }}"></canvas>
+                    </div>
+            </section>
+            <section class="section">
+                    <p class="title">Temperatures</p>
+                    <div class="subtitle">
+                        <canvas id="temp_graph" width="80%" height="{{ canvas_height }}" ></canvas>
+                    </div>
+            </section>
+            <section class="section">
+                    <p class="title">RAM</p>
+                    <p class="subtitle">
+                        <p>Total : <span id="tram"></span></p>
+                        <canvas id="ram_graph" width="80%" height="{{ canvas_height }}" ></canvas>
+                    </p>
+            </section>
+            <section class="section">
+                    <p class="title">Disk</p>
+                    <p class="subtitle">
+                        <p>Total : <span id="tdisk"></span></p>
+                        <canvas id="disk_graph" width="80%" height="{{ canvas_height }}" ></canvas>
+                    </p>
+            </section>
+            <section class="section">
+                    <p class="title">
+                        Network
+                    </p>
+                    <p class="subtitle">
+                        <canvas id="net_graph" width="80%" height="{{ canvas_height }}"></canvas>
+                    </p>
+            </section>

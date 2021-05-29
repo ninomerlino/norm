@@ -1,14 +1,13 @@
 from . import monitoring
+from json import dumps
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
-
 @app.route('/', methods = ['GET'])
 def index():
-    canvas = "20%"
-    if "mobile" in request.headers['user-agent'].lower():
-        canvas = "40%"
-    return render_template("index2.html", canvas_height=canvas)
+    cores, ram, net, disk, term, env=monitoring.setup()
+    return render_template("monitor.html", cores=cores,
+     disk_size=disk,ram_size=ram, net_setup=net, thermal_setup=dumps(term),env=env)
 
 @app.route('/process', methods = ['GET','POST'])
 def process():
@@ -19,10 +18,7 @@ def process():
         print(process_name)
         return {'proc':monitoring.process_list(process_name)}
 
-@app.route('/update', methods = ['POST'])
+@app.route('/update', methods = ['GET'])
 def update():
     return monitoring.dynamic()
 
-@app.route('/setup', methods = ['POST'])
-def setup():
-    return monitoring.setup()

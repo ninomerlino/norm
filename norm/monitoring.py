@@ -4,6 +4,22 @@ import subprocess
 
 prev_data = {}
 max_process_name = 100
+hz_scale = ['MHz','GHz','THz']
+byte_scale = ["byte", "KB","MB","GB","TB","PB"]
+
+def scale_hz(freq):
+    i = 0
+    while freq > 1000:
+        freq /= 1000
+        i += 1
+    return str(freq) + hz_scale[i]
+
+def scale_byte(size):
+    i = 0
+    while size > 1000:
+        size /= 1000
+        i += 1
+    return str(round(size)) + byte_scale[i]
 
 def env_info():
     system = platform.system()
@@ -33,7 +49,7 @@ def cpu_freq():
     output = {}
     i = 0
     while(i < len(corelist)):#brutto ma for loop non funziona se i core sono uguali
-        output[f"core {i}"] = [corelist[i][1], corelist[i][2]]
+        output[f"core {i}"] = [scale_hz(corelist[i][1]),scale_hz(corelist[i][2])]
         i+=1
     return output
 
@@ -50,7 +66,7 @@ def temp():
 
 def ram_dimension():
     ram = psutil.virtual_memory()
-    return ram[0]    
+    return scale_byte(ram[0])    
 
 def ram_usage():
     ram = psutil.virtual_memory()
@@ -60,11 +76,10 @@ def net_addr():
     interfaces = psutil.net_if_addrs()
     output = {}
     for interface in interfaces.keys():
-        output[interface + "(sent)"] = interfaces[interface][0][1]
-        output[interface + "(recv)"] = interfaces[interface][0][1]
+        output[interface] = [interfaces[interface][0][1],interfaces[interface][0][2]]
     return output
 
-def net_speed():
+def net_speed():#net speed ma in realta controlla il traffico
     global prev_data
     interfaces = psutil.net_io_counters(pernic=True,nowrap=False)
     output = {}
@@ -78,7 +93,7 @@ def net_speed():
 
 def disk_dimension():
     disk = psutil.disk_usage("/")
-    return disk[0]  
+    return scale_byte(disk[0])  
 
 def disk_usage():
     disk = psutil.disk_usage("/")
@@ -92,21 +107,18 @@ def create_process_dict(string):
     return {'pid':col[0], 'user':col[1], 'time':col[2], 'cmd':col[3][:max_process_name], 'args':args}
 
 def setup() -> dict :
+    '''
+    return cpu_cores, ram_size, net_addrs, disk_size
+    termal_sensor, env_info
+    '''
     global prev_data
     tmp = psutil.net_io_counters(pernic=True)
-    for interface in tmp.keys():
+    for interface in tmp.keys(): #inizializa i valori di prev_data per ottenere la differenza di pacchetti e non il numero totale
         prev_data[interface] = {} 
         prev_data[interface]["sent"] = tmp[interface][2]
         prev_data[interface]["recv"] = tmp[interface][3]
     psutil.cpu_percent(percpu=True) #non sono pazzo ci serve qua
-    output = {}
-    output['cpu'] = cpu_freq()
-    output['ram'] = ram_dimension()
-    output['net'] = net_addr()
-    output['disk'] = disk_dimension()
-    output["temp"] = termal_sensors()
-    output['env'] = env_info()
-    return output
+    return cpu_freq(), ram_dimension(), net_addr(), disk_dimension(), termal_sensors(), env_info()
 
 def dynamic() -> dict :
     output = {}
