@@ -1,0 +1,15 @@
+
+FrontEnd:
+  ☐ add thermal chart 
+  ☐ add ram usage chart
+  ☐ rework proccess page
+  ☐ add ispector chart
+  ☐ custom scriptsItem
+
+Backend:
+  ☐ save settings on remote
+  ☐ add user auth with jwt
+
+GitHub:
+  ☐ improve readme
+  ☐ improve .deb

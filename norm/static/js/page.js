@@ -4,106 +4,93 @@ const adv_settings_list = document.getElementById("adv_settings_list");
 const settings_rate_switch = document.getElementById("settings_rate_switch");
 const settings_rate_list = document.getElementById("settings_rate_list");
 const run_switch = document.getElementById('run_switch');
-const valid_colors = ['red','blue','green','yellow','lightblue','lime','orange','royalblue','forestgreen']
+var remote_collected_data = {
+    cpu_usage:[],
+    net_traffic:[],
+    disk_usage:[],
+    ram_usage:[],
+    temp:{}
+}
 //classes
 class Settings{
     static rate = 1000;
-    static buffer_size = 30;
+    static buffer_size = 100;
     static danger_core_treshold = 90;
     static warning_core_treshold = 70;
 }
 class ChartManager{
     static cpu_usage_chart;
+    static cpu_detail_chart;
     static disk_usage_chart;
     static net_traffic_chart;
-    static cpu_chart(canvas_id, data, type = 'line', curve = 'smooth', width = 3){//dataset = {name, data}
-        let datasets = []
-        for(let i = 0; i < data.length; i++){
-            datasets.push({name:data[i],data:[]})
-        }
-        return new ApexCharts(document.getElementById(canvas_id), {
-            chart: {type: type, height: '90%',
-            animations: {
-                enabled: true,
-                easing: 'linear',
-                speed: 200,
-                dynamicAnimation: {
-                    enabled: true,
-                    speed: 350
-            }}},
-            stroke: {width: width, curve: curve},
-            series: datasets,
-            xaxis: {categories: []}
+    static render_charts(){
+        ChartManager.cpu_detail_chart.render();
+        ChartManager.disk_usage_chart.render();
+        ChartManager.cpu_usage_chart.render();
+        ChartManager.net_traffic_chart.render();
+    }
+    static cpu_chart(canvas_id, canvas_id2){//dataset = {name, data}
+        ChartManager.cpu_detail_chart = new ApexCharts(document.getElementById(canvas_id), {
+            chart: {id:"cpu",type: 'line', height: '60%',
+            animations: {enabled: false, easing: 'linear',},
+            toolbar: {tools: {download: true,selection: false,zoom: false,zoomin: false,
+                zoomout: false,pan: false,reset: false}},
+            },
+            stroke: {width: 3, curve: 'smooth'},
+            series: remote_collected_data.cpu_usage,
+            xaxis: {labels:{show:false}},
+        });
+        ChartManager.cpu_usage_chart = new ApexCharts(document.getElementById(canvas_id2), {
+            chart: {id:"cpu2",type: 'line', height: '40%',
+            animations: {enabled: true, easing: 'linear',},
+            toolbar: {show: false},
+            brush:{target: "cpu",enabled: true},
+            selection: {enabled: true, xaxis: {min: 1,max: 30}},
+            },
+            stroke: {width: 3, curve: 'smooth'},
+            series: remote_collected_data.cpu_usage,
+            xaxis: {labels:{show:false}},
         });
     }
     static disk_chart(canvas_id){
-        return new ApexCharts(document.getElementById(canvas_id), {
-            chart: {
-                height: "90%",
-                type: 'radialBar',
-                animations: {
-                    enabled: true,
-                    easing: 'linear',
-                    speed: 800,
-                    dynamicAnimation: {
-                        enabled: true,
-                        speed: 350
-                    }
-                }
-            },
-            dataLabels: {value: {show: true}},
-            series: [0],
-            colors: ["hsl(48, 100%, 67%)"],
-            labels: [''],
+        ChartManager.disk_usage_chart = new ApexCharts(document.getElementById(canvas_id), {
+            chart: {height: "70%",type: 'radialBar'},
+            plotOptions: {radialBar: {dataLabels: {
+                name: {color: "hsl(0, 0%, 21%)",fontSize: "20px"},
+                value: {color: "hsl(0, 0%, 21%)",fontSize: "18px",show: true}}}},
+            series: remote_collected_data.disk_usage,
+            colors: ["hsl(48, 100%, 67%)"],// bulma yellow
+            labels: ['Used space'],
         });
     }
-    static net_chart(canvas_id, interfaces){
+    static net_chart(canvas_id){
         let datasets = [{name: 'Recived',data: []}, {name: 'Sent',data: []}];
-        return new ApexCharts(document.getElementById(canvas_id), {
+        ChartManager.net_traffic_chart = new ApexCharts(document.getElementById(canvas_id), {
             series:datasets,
-            chart: {
-            height: "90%",
-            type: 'bar',
-            },
-            xaxis: {categories: interfaces,}
+            chart: {height: "90%", type: 'bar',animations: {enabled: true, easing: 'linear',},},
+            xaxis: {categories: names_of_objects(remote_collected_data.net_traffic)},
+            yaxis: {show:false},
         });
     }
-    static generate_charts(){
-        let c = [];
-        for (let index = 0; index < document.getElementsByClassName('corename').length; index++) {
-            c.push("core "+index);
+    static init_charts(){
+        for (let f of document.getElementsByClassName('corename')) {
+            remote_collected_data.cpu_usage.push({name:f.innerText,data:[]})
         }
-        let n = [];
         for(let f of document.getElementsByClassName('if-name')){
-            n.push(f.innerText)
+            remote_collected_data.net_traffic.push({name:f.innerText,data:[]})
         }
-        ChartManager.cpu_usage_chart = ChartManager.cpu_chart('cpu_canvas', c);
-        ChartManager.disk_usage_chart = ChartManager.disk_chart('disk_canvas');
-        ChartManager.net_traffic_chart = ChartManager.net_chart('net_canvas', n);
-        ChartManager.cpu_usage_chart.render()
-        ChartManager.disk_usage_chart.render()
-        ChartManager.net_traffic_chart.render()
+        ChartManager.cpu_chart('cpu_canvas', 'cpu_canvas2');
+        ChartManager.disk_chart('disk_canvas');
+        ChartManager.net_chart('net_canvas');
+        ChartManager.render_charts();
     }
-    static update_cpu_chart(chart,values){
-        let datasets = []
-        for(let i = 0; i < values.length; i++){
-            while(chart.opts.series[i].data.length >= Settings.buffer_size){
-                chart.opts.series[i].data.shift()
-            }
-            datasets.push({data:[values[i]]})
+    static update_net_chart(data){
+        let datasets = [{name: 'Sent',data: []}, {name: 'Received',data: []}];
+        for(let name of names_of_objects(remote_collected_data.net_traffic)){
+            datasets[0].data.push(data[name][0]);
+            datasets[1].data.push(data[name][1]);
         }
-        chart.appendData(datasets);
-    }
-    static update_disk_chart(chart, value){
-        chart.opts.series[0] = value;
-    }
-    static update_net_chart(chart, values){
-        let datasets = [{name: 'Sent',data: []}, {name: 'Recived',data: []}];
-        for(let i=0; i<values.length; i+=2){
-            datasets[0].data.push(values[i]);
-            datasets[1].data.push(values[i+1]);
-        }
-        chart.updateSeries(datasets);
+        ChartManager.net_traffic_chart.updateSeries(datasets);
     }
 }
 class ServerConnection{
@@ -125,17 +112,23 @@ class ServerConnection{
         })
         return await response.json()
     }
-
     static async update(){
         while (run_switch.checked){
-            if(window.location.pathname) {
+            if(window.location.pathname == "/") {
                 let new_data = await ServerConnection.get('/update');
-                ChartManager.update_cpu_chart(ChartManager.cpu_usage_chart, new_data.cpu_usage);
-                for (let i = 0; i < new_data.cpu_usage.length; i++) {
-                    change_status(new_data.cpu_usage[i], "core "+i);
+                for(let inx = 0; inx < remote_collected_data.cpu_usage.length; inx++){
+                    push_with_buffersize(remote_collected_data.cpu_usage[inx].data, new_data.cpu_usage[inx])
                 }
-                ChartManager.update_disk_chart(ChartManager.disk_usage_chart, new_data.disk_usage)
-                ChartManager.update_net_chart(ChartManager.net_traffic_chart, Object.values(new_data.net_speed));
+                for(let inx = 0; inx < remote_collected_data.net_traffic.length; inx++){
+                    let el = remote_collected_data.net_traffic[inx]
+                    push_with_buffersize(el.data, new_data.net_speed[el.name])
+                }
+                push_with_buffersize(remote_collected_data.disk_usage, new_data.disk_usage);
+                push_with_buffersize(remote_collected_data.ram_usage, new_data.ram);
+                ChartManager.cpu_usage_chart.updateSeries(remote_collected_data.cpu_usage);
+                ChartManager.cpu_detail_chart.updateSeries(remote_collected_data.cpu_usage);
+                ChartManager.disk_usage_chart.updateSeries([new_data.disk_usage]);
+                ChartManager.update_net_chart(new_data.net_speed);
                 await ServerConnection.sleep();
             }
         }
@@ -161,6 +154,16 @@ function get_color(index){
 function start(){
     console.log("start");
 }
+function push_with_buffersize(arr, value){
+    arr.push(value);
+    while(arr.length > Settings.buffer_size)arr.shift();
+}
+function names_of_objects(list){
+    let names = []
+    for(let inx = 0; inx < remote_collected_data.net_traffic.length; inx++)
+    names.push(remote_collected_data.net_traffic[inx].name);
+    return names;
+}
 //Events
 adv_settings_switch.addEventListener(
     'click',
@@ -181,7 +184,7 @@ for(element of document.getElementsByClassName('settings_rate_value')){
         'click',
         (event)=>{
             let value = event.target.innerHTML;
-            Settings.rate = parseInt(value.replace('ms',''));
+            Settings.rate = parseFloat(value)*1000;
             settings_rate_list.classList.toggle('is-hidden');
             settings_rate_switch.classList.toggle('is-active');
         }
@@ -227,5 +230,5 @@ run_switch.addEventListener(
     }    
 );
 //main process
-ChartManager.generate_charts();
+ChartManager.init_charts();
 ServerConnection.update().then(()=>{console.log("update stopped")});

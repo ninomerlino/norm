@@ -6,6 +6,7 @@ prev_data = {}
 max_process_name = 100
 hz_scale = ['MHz','GHz','THz']
 byte_scale = ["byte", "KB","MB","GB","TB","PB"]
+interface_names = []
 
 def scale_hz(freq):
     i = 0
@@ -73,22 +74,22 @@ def ram_usage():
     return ram[2]
 
 def net_addr():
+    global interface_names
     interfaces = psutil.net_if_addrs()
+    interface_names = list(interfaces.keys())
     output = {}
-    for interface in interfaces.keys():
-        output[interface] = [interfaces[interface][0][1],interfaces[interface][0][2]]
+    for name in interface_names:
+        output[name] = [interfaces[name][0][1],interfaces[name][0][2]]
     return output
 
 def net_speed():#net speed ma in realta controlla il traffico
     global prev_data
     interfaces = psutil.net_io_counters(pernic=True,nowrap=False)
     output = {}
-    for interface in interfaces.keys():
-        output[interface + "(sent)"] = interfaces[interface][2] - prev_data[interface]["sent"]
-        output[interface + "(recv)"] = interfaces[interface][3] - prev_data[interface]["recv"]
+    for interface in interface_names:
+        output[interface] = [interfaces[interface][2] - prev_data[interface]["sent"], interfaces[interface][3] - prev_data[interface]["recv"]]
         prev_data[interface]["sent"] = interfaces[interface][2]
         prev_data[interface]["recv"] = interfaces[interface][3]
-
     return output
 
 def disk_dimension():
