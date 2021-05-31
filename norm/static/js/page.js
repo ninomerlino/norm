@@ -6,10 +6,11 @@ const settings_rate_list = document.getElementById("settings_rate_list");
 const run_switch = document.getElementById('run_switch');
 var remote_collected_data = {
     cpu_usage:[],
-    net_traffic:[],
+    net_traffic_recieved:[],
+    net_traffic_sent:[],
     disk_usage:[],
     ram_usage:[],
-    temp:{}
+    temp:[]
 }
 //classes
 class Settings{
@@ -17,43 +18,31 @@ class Settings{
     static buffer_size = 100;
     static danger_core_treshold = 90;
     static warning_core_treshold = 70;
+    static danger_thermal_treshold = 90;
+    static warning_thermal_treshold = 70;
 }
 class ChartManager{
     static cpu_usage_chart;
-    static cpu_detail_chart;
     static disk_usage_chart;
-    static net_traffic_chart;
-    static render_charts(){
-        ChartManager.cpu_detail_chart.render();
-        ChartManager.disk_usage_chart.render();
-        ChartManager.cpu_usage_chart.render();
-        ChartManager.net_traffic_chart.render();
-    }
-    static cpu_chart(canvas_id, canvas_id2){//dataset = {name, data}
-        ChartManager.cpu_detail_chart = new ApexCharts(document.getElementById(canvas_id), {
-            chart: {id:"cpu",type: 'line', height: '60%',
+    static net_traffic_chart_recieved;
+    static net_traffic_chart_send
+    static net_usage_chart;
+    static ram_usage_chart;
+    static temp_chart;
+    static cpu_chart(canvas_id, data, type = 'line'){//dataset = {name, data}
+       return new ApexCharts(document.getElementById(canvas_id), {
+            chart: {type: type, height: '90%',
             animations: {enabled: false, easing: 'linear',},
-            toolbar: {tools: {download: true,selection: false,zoom: false,zoomin: false,
-                zoomout: false,pan: false,reset: false}},
+            toolbar: {tools: {download: true,selection: false,zoom: true,zoomin: true,
+                zoomout: true,pan: false,reset: false}},
             },
             stroke: {width: 3, curve: 'smooth'},
-            series: remote_collected_data.cpu_usage,
-            xaxis: {labels:{show:false}},
-        });
-        ChartManager.cpu_usage_chart = new ApexCharts(document.getElementById(canvas_id2), {
-            chart: {id:"cpu2",type: 'line', height: '40%',
-            animations: {enabled: true, easing: 'linear',},
-            toolbar: {show: false},
-            brush:{target: "cpu",enabled: true},
-            selection: {enabled: true, xaxis: {min: 1,max: 30}},
-            },
-            stroke: {width: 3, curve: 'smooth'},
-            series: remote_collected_data.cpu_usage,
+            series: data,
             xaxis: {labels:{show:false}},
         });
     }
     static disk_chart(canvas_id){
-        ChartManager.disk_usage_chart = new ApexCharts(document.getElementById(canvas_id), {
+        return new ApexCharts(document.getElementById(canvas_id), {
             chart: {height: "70%",type: 'radialBar'},
             plotOptions: {radialBar: {dataLabels: {
                 name: {color: "hsl(0, 0%, 21%)",fontSize: "20px"},
@@ -63,34 +52,30 @@ class ChartManager{
             labels: ['Used space'],
         });
     }
-    static net_chart(canvas_id){
-        let datasets = [{name: 'Recived',data: []}, {name: 'Sent',data: []}];
-        ChartManager.net_traffic_chart = new ApexCharts(document.getElementById(canvas_id), {
-            series:datasets,
-            chart: {height: "90%", type: 'bar',animations: {enabled: true, easing: 'linear',},},
-            xaxis: {categories: names_of_objects(remote_collected_data.net_traffic)},
-            yaxis: {show:false},
-        });
-    }
     static init_charts(){
         for (let f of document.getElementsByClassName('corename')) {
             remote_collected_data.cpu_usage.push({name:f.innerText,data:[]})
         }
         for(let f of document.getElementsByClassName('if-name')){
-            remote_collected_data.net_traffic.push({name:f.innerText,data:[]})
+            remote_collected_data.net_traffic_sent.push({name:f.innerText,data:[]})
+            remote_collected_data.net_traffic_recieved.push({name:f.innerText,data:[]})
         }
-        ChartManager.cpu_chart('cpu_canvas', 'cpu_canvas2');
-        ChartManager.disk_chart('disk_canvas');
-        ChartManager.net_chart('net_canvas');
-        ChartManager.render_charts();
-    }
-    static update_net_chart(data){
-        let datasets = [{name: 'Sent',data: []}, {name: 'Received',data: []}];
-        for(let name of names_of_objects(remote_collected_data.net_traffic)){
-            datasets[0].data.push(data[name][0]);
-            datasets[1].data.push(data[name][1]);
+        for(let f of document.getElementsByClassName('thermal-name')){
+            remote_collected_data.temp.push({name:f.innerText,data:[]})
         }
-        ChartManager.net_traffic_chart.updateSeries(datasets);
+        remote_collected_data.ram_usage = [{name:'ram',data:[]}]
+        ChartManager.cpu_usage_chart = ChartManager.cpu_chart('cpu_canvas', remote_collected_data.cpu_usage);
+        ChartManager.disk_usage_chart = ChartManager.disk_chart('disk_canvas');
+        ChartManager.net_traffic_chart_send = ChartManager.cpu_chart('net_canvas', remote_collected_data.net_traffic_sent);
+        ChartManager.net_traffic_chart_recieved = ChartManager.cpu_chart('net_canvas2', remote_collected_data.net_traffic_recieved);
+        ChartManager.temp_chart = ChartManager.cpu_chart('thermal_canvas', remote_collected_data.temp);
+        ChartManager.ram_usage_chart = ChartManager.cpu_chart('ram_canvas', remote_collected_data.ram_usage, 'area')
+        ChartManager.disk_usage_chart.render();
+        ChartManager.cpu_usage_chart.render();
+        ChartManager.net_traffic_chart_send.render();
+        ChartManager.net_traffic_chart_recieved.render();
+        ChartManager.temp_chart.render();
+        ChartManager.ram_usage_chart.render();
     }
 }
 class ServerConnection{
@@ -116,37 +101,49 @@ class ServerConnection{
         while (run_switch.checked){
             if(window.location.pathname == "/") {
                 let new_data = await ServerConnection.get('/update');
-                for(let inx = 0; inx < remote_collected_data.cpu_usage.length; inx++){
-                    push_with_buffersize(remote_collected_data.cpu_usage[inx].data, new_data.cpu_usage[inx])
+                for(let index of Object.keys(remote_collected_data.cpu_usage)){
+                    push_with_buffersize(remote_collected_data.cpu_usage[index].data, new_data.cpu_usage[index])
+                    change_status(new_data.cpu_usage[index], remote_collected_data.cpu_usage[index].name, Settings.danger_core_treshold, Settings.warning_core_treshold);
                 }
-                for(let inx = 0; inx < remote_collected_data.net_traffic.length; inx++){
-                    let el = remote_collected_data.net_traffic[inx]
-                    push_with_buffersize(el.data, new_data.net_speed[el.name])
+                for(let inx = 0; inx < remote_collected_data.net_traffic_sent.length; inx++){
+                    let se = remote_collected_data.net_traffic_sent[inx];
+                    let re = remote_collected_data.net_traffic_recieved[inx];
+                    push_with_buffersize(se.data, new_data.net_speed[se.name][0]);
+                    push_with_buffersize(re.data, new_data.net_speed[re.name][1]);
                 }
+                for(let inx = 0; inx < remote_collected_data.temp.length; inx++){
+                    let el = remote_collected_data.temp[inx];
+                    push_with_buffersize(el.data, new_data.temp[el.name]);
+                    change_status(new_data.temp[el.name], el.name, Settings.danger_thermal_treshold, Settings.warning_thermal_treshold, "is-", true);
+                }
+                push_with_buffersize(remote_collected_data.ram_usage, new_data.ram)
                 push_with_buffersize(remote_collected_data.disk_usage, new_data.disk_usage);
-                push_with_buffersize(remote_collected_data.ram_usage, new_data.ram);
+                push_with_buffersize(remote_collected_data.ram_usage[0].data, new_data.ram);
                 ChartManager.cpu_usage_chart.updateSeries(remote_collected_data.cpu_usage);
-                ChartManager.cpu_detail_chart.updateSeries(remote_collected_data.cpu_usage);
+                ChartManager.temp_chart.updateSeries(remote_collected_data.temp);
                 ChartManager.disk_usage_chart.updateSeries([new_data.disk_usage]);
-                ChartManager.update_net_chart(new_data.net_speed);
+                ChartManager.net_traffic_chart_send.updateSeries(remote_collected_data.net_traffic_sent);
+                ChartManager.net_traffic_chart_recieved.updateSeries(remote_collected_data.net_traffic_recieved);
+                ChartManager.ram_usage_chart.updateSeries(remote_collected_data.ram_usage);
                 await ServerConnection.sleep();
             }
         }
     }
 }
 //Functions
-function change_status(core_value, core_name){
+function change_status(element_value, element_name, danger, warning, change = "has-background-", update_value = false){
     let new_status = "success";
-    let core = document.getElementById(core_name);
-    if(core_value > Settings.danger_core_treshold){
+    let element = document.getElementById(element_name);
+    if(element_value > danger){
         new_status = "danger";
-    }else if(core_value > Settings.warning_core_treshold){
+    }else if(element_value > warning){
         new_status = "warning";
     }
-    if(new_status != core.status){
-        core.classList.replace("has-background-"+core.status, "has-background-"+new_status);
-        core.status = new_status;
+    if(new_status != element.dataset.status){
+        element.classList.replace(change+element.dataset.status, change+new_status);
+        element.dataset.status = new_status;
     }
+    if(update_value)element.value = element_value;
 }
 function get_color(index){
     return valid_colors[index%valid_colors.length];
@@ -221,6 +218,22 @@ document.getElementById('warning_core_input').addEventListener(
         console.log(event.target.value)
         let value = event.target.value;
         if(value <= 100 && value >= 0)Settings.warning_core_treshold = value;
+    }    
+);
+document.getElementById('danger_thermal_input').addEventListener(
+    'change',
+    (event) => {
+        console.log(event.target.value)
+        let value = event.target.value;
+        if(value <= 100 && value >= 0)Settings.danger_thermal_treshold = value;
+    }    
+);
+document.getElementById('warning_thermal_input').addEventListener(
+    'change',
+    (event) => {
+        console.log(event.target.value)
+        let value = event.target.value;
+        if(value <= 100 && value >= 0)Settings.warning_thermal_treshold = value;
     }    
 );
 run_switch.addEventListener(

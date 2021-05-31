@@ -5,7 +5,7 @@
         {% for core,value in cores.items() %}
         <div class="column">
             <div class="card">
-                <header id="{{ core }}" class="card-header has-background-success" status="success">
+                <header id="{{ core }}" class="card-header has-background-success" data-status="success">
                 <p class="card-header-title has-text-center"> 
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M16.25 6c.414 0 .75.336.75.75v9.5c0 .414-.336.75-.75.75h-9.5c-.414 0-.75-.336-.75-.75v-9.5c0-.414.336-.75.75-.75h9.5zm2.75 0c0-1.104-.896-2-2-2h-11c-1.104 0-2 .896-2 2v11c0 1.104.896 2 2 2h11c1.104 0 2-.896 2-2v-11zm-11 14v3h-1v-3h1zm4 0v3h-1v-3h1zm2 0v3h-1v-3h1zm-4 0v3h-1v-3h1zm6 0v3h-1v-3h1zm-8-20v3h-1v-3h1zm4 0v3h-1v-3h1zm2 0v3h-1v-3h1zm-4 0v3h-1v-3h1zm6 0v3h-1v-3h1zm4 15h3v1h-3v-1zm0-4h3v1h-3v-1zm0-2h3v1h-3v-1zm0 4h3v1h-3v-1zm0-6h3v1h-3v-1zm-20 8h3v1h-3v-1zm0-4h3v1h-3v-1zm0-2h3v1h-3v-1zm0 4h3v1h-3v-1zm0-6h3v1h-3v-1z"/></svg>
                     <span class="corename">{{ core }}</span>
@@ -58,6 +58,20 @@
         <div class="column">
             <div class="card">
                 <header class="card-header">
+                    <p class="card-header-title has-text-center">Ram usage</p>
+                </header>
+                <div id="ram-content" class="card-content">
+                    <div class="content">
+                        <p >Ram size : {{ ram_size }}</p>
+                        <div id="ram_canvas" style="height: 40vh;"></div>
+                    </div>
+                </div>
+                <footer class="card-footer"><a id="hide-ram-content" class="card-footer-item">hide chart</a></footer>
+            </div>
+        </div>
+        <div class="column is-two-fifths">
+            <div class="card">
+                <header class="card-header">
                     <p class="card-header-title has-text-center">Network intefaces</p>
                 </header>
                 <div id="interf-content" class="card-content">
@@ -70,11 +84,13 @@
                 </div>
                 <footer class="card-footer"><a id="hide-interf-content" class="card-footer-item">hide chart</a></footer>
             </div>
-        </div>
+        </div>  
+    </div>
+    <div class="columns">
         <div class="column">
             <div class="card">
                 <header class="card-header">
-                    <p class="card-header-title has-text-center">Network traffic</p>
+                    <p class="card-header-title has-text-center">Incoming network traffic</p>
                 </header>
                 <div id="net-content" class="card-content">
                     <div class="content">
@@ -84,9 +100,53 @@
                 <footer class="card-footer"><a id="hide-net-content" class="card-footer-item">hide chart</a></footer>
             </div>
         </div>
+        <div class="column">
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title has-text-center">Outgoing network traffic</p>
+                </header>
+                <div id="net2-content" class="card-content">
+                    <div class="content">
+                        <div id="net_canvas2" style="height: 40vh;"></div>
+                    </div>
+                </div>
+                <footer class="card-footer"><a id="hide-net2-content" class="card-footer-item">hide chart</a></footer>
+            </div>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title has-text-center">Thermal sensors</p>
+                </header>
+                <div id="therm-content" class="card-content">
+                    {% for row in thermal_setup %}
+                    <div class="columns">
+                        {% for sensor in row %}
+                        {% if sensor %}
+                        <div class="column">
+                            <label class="label thermal-name">{{ sensor }}</label>
+                            <progress class="progress is-success" id="{{ sensor }}" value="0" max="100" data-status="success"></progress>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <footer class="card-footer"><a id="hide-therm-content" class="card-footer-item">hide chart</a></footer>
+            </div>
+        </div>
+        <div class="column">
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title has-text-center">Thermal sensors</p>
+                </header>
+                <div id="thermchart-content" class="card-content">
+                    <div id="thermal_canvas" style="height: 40vh;"></div>
+                </div>
+                <footer class="card-footer"><a id="hide-thermchart-content" class="card-footer-item">hide chart</a></footer>
+            </div>
     </div>
 </div>
-<script>
-    var thermal_info = {{ thermal_setup|safe }};
-</script>
 {% endblock %}

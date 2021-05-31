@@ -7,7 +7,7 @@ app = Flask(__name__)
 def index():
     cores, ram, net, disk, term, env=monitoring.setup()
     return render_template("monitor.html", cores=cores,
-     disk_size=disk,ram_size=ram, net_setup=net, thermal_setup=dumps(term),env=env)
+     disk_size=disk,ram_size=ram, net_setup=net, thermal_setup=term,env=env)
 
 @app.route('/process', methods = ['GET','POST'])
 def process():

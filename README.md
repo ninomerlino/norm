@@ -8,7 +8,6 @@ Norm allows you to monitor your computer basic statistics over the network it wa
  > **note** : without the port specification norm will use the 5000 port
  - -w if you wanna specify the number of workers, more than one is reccomended if you want to use multiple client at the same time
  - -ns to remove https protocol and use only http protocol
- > **note** : the information will be visible to all people in the lan if -ns is present
 
 Norm client will be available on https://[*host*]:[*port*] or http://[*host*]:[*port*] when norm client uses https it certificates himself so your browser will very probably display a warning
 

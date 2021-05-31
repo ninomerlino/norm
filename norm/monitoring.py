@@ -1,6 +1,7 @@
 import psutil
 import platform
 import subprocess
+from math import sqrt
 
 prev_data = {}
 max_process_name = 100
@@ -21,6 +22,26 @@ def scale_byte(size):
         size /= 1000
         i += 1
     return str(round(size)) + byte_scale[i]
+
+def resize_close_to_square(array):
+    '''
+    finds a and b where a*b = x and a is the closest int to
+    the square root of x then rezise the list as a 2d array
+    with a columns and b rows
+    '''
+    length = len(array)
+    new_lenth = int(sqrt(length))+1
+    output = []
+    i = 0
+    for r in range(new_lenth):
+        output.append([])
+        for c in range(new_lenth):
+            if i < length:
+                output[r].append(array[i])
+            else:
+                output[r].append(None)
+            i += 1
+    return output
 
 def env_info():
     system = platform.system()
@@ -56,7 +77,8 @@ def cpu_freq():
 
 def termal_sensors():
     temp = psutil.sensors_temperatures()
-    return list(temp.keys())
+    temp = list(temp.keys())
+    return resize_close_to_square(temp)
 
 def temp():
     temp = psutil.sensors_temperatures()
