@@ -1,8 +1,10 @@
+import sys
 import psutil
 import platform
 import subprocess
 from math import sqrt
 
+system = ''
 prev_data = {}
 max_process_name = 100
 hz_scale = ['MHz','GHz','THz']
@@ -44,6 +46,7 @@ def resize_close_to_square(array):
     return output
 
 def env_info():
+    global system
     system = platform.system()
     os = platform.node()
     if "Windows" in system:
@@ -122,9 +125,22 @@ def disk_usage():
     disk = psutil.disk_usage("/")
     return disk[3]
 
-def create_process_dict(*keys):
+def look_for_process(search_value = ''):
+    keys = ['ppid','name','status','username','cpu_times','cpu_percent']
+    if system == "Windows" and 'ppid' in keys:
+        keys.remove('ppid')
     process = psutil.process_iter(keys)
-
+    output = []
+    for p in process:
+        p = p.info
+        p['ppid'] = str(p['ppid'])
+        p['cpu_percent'] = str(p['cpu_percent'])
+        p['cpu_times'] = str(sum(p['cpu_times']))
+        p = "\n".join(p.values())
+        if search_value in p:
+            output.append(p)
+    return output
+    
 
 def setup() -> dict :
     '''
@@ -147,13 +163,4 @@ def dynamic() -> dict :
     output["ram"] = ram_usage()
     output["disk_usage"] = disk_usage()
     output["net_speed"] = net_speed()
-    return output
-
-def process_list(proc_name):
-    output = []
-    if platform.system() == 'Linux':
-        all_process = subprocess.check_output(["ps","-e","--format","pid,user,time,cmd"]).decode("UTF-8").split("\n")
-        for process in all_process:
-            if proc_name in process and process != '':
-                output.append(create_process_dict(process))
     return output
