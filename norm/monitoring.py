@@ -122,12 +122,9 @@ def disk_usage():
     disk = psutil.disk_usage("/")
     return disk[3]
 
-def create_process_dict(string):
-    col = list(filter(lambda x: x!='', string.strip().split(" ")))
-    args = ""
-    if len(col) > 4:
-        args = " ".join(col[4:])
-    return {'pid':col[0], 'user':col[1], 'time':col[2], 'cmd':col[3][:max_process_name], 'args':args}
+def create_process_dict(*keys):
+    process = psutil.process_iter(keys)
+
 
 def setup() -> dict :
     '''
