@@ -18,7 +18,7 @@ On the norm client you can:
 - Hide charts you don't want to see
 - Save chart as png or svg
 - Sampling speed from *1s* to *5s*
-- list all process in execution and filter them by pid, user, time of execution or command **ONLY on linux**
+- list all process in execution and filter them by id, user, time of execution, name or cpu usage 
 
 ## Install Norm
 
