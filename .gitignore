@@ -1,4 +1,6 @@
-
+norm/__pycache__/*
+./__pycache__/*
+.vscode/*
 test.py
 compile.py
 *.deb
