@@ -1,13 +1,10 @@
 
 FrontEnd:
-  ☐ add thermal chart 
-  ☐ add ram usage chart
   ☐ rework proccess page
   ☐ add ispector chart
   ☐ custom scriptsItem
 
 Backend:
-  ☐ work on process api
   ☐ save settings on remote
   ☐ add user auth with jwt
 

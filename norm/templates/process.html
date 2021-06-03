@@ -1,6 +1,43 @@
 {% extends "base.html" %}
 {% block body %}
 <div class="column mr-4 mt-1">
-    
+    <form action="">
+        <div class="field">
+            <input class="input is-rounded" type="text" placeholder="Search bar" id="searchbar">
+        </div>
+        <div class="field">
+            {% if env.system != "Windows" %}
+            <label class="checkbox m-2">
+                <input id="checkbox_id" type="checkbox" checked=true>
+                ppid
+            </label>
+            {% endif %}
+            <label class="checkbox m-2">
+                <input id="checkbox_name" type="checkbox" checked=true>
+                name
+            </label>
+            <label class="checkbox m-2">
+                <input id="checkbox_status" type="checkbox" checked=true>
+                status
+            </label>
+            <label class="checkbox m-2">
+                <input id="checkbox_username" type="checkbox" checked=true>
+                username
+            </label>
+            <label class="checkbox m-2">
+                <input id="checkbox_cputime" type="checkbox" checked=true>
+                cpu time
+            </label>
+            <label class="checkbox m-2">
+                <input id="checkbox_cpupercentage" type="checkbox" checked=true>
+                cpu percentage
+            </label>
+        </div>
+    </form>
+    <div class="container">
+        <div class="title">Active process list</div>
+        <table class="table" id="process_table">
+        </table>
+    </div>
 </div>
 {% endblock %}

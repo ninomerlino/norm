@@ -1,4 +1,3 @@
-import sys
 import psutil
 import platform
 import subprocess
@@ -142,10 +141,9 @@ def look_for_process(search_value = ''):
     return output
     
 
-def setup() -> dict :
+def bootMonitor():
     '''
-    return cpu_cores, ram_size, net_addrs, disk_size
-    termal_sensor, env_info
+    init the monitor module
     '''
     global prev_data
     tmp = psutil.net_io_counters(pernic=True)
@@ -154,7 +152,6 @@ def setup() -> dict :
         prev_data[interface]["sent"] = tmp[interface][2]
         prev_data[interface]["recv"] = tmp[interface][3]
     psutil.cpu_percent(percpu=True) #non sono pazzo ci serve qua
-    return cpu_freq(), ram_dimension(), net_addr(), disk_dimension(), termal_sensors(), env_info()
 
 def dynamic() -> dict :
     output = {}
@@ -164,3 +161,14 @@ def dynamic() -> dict :
     output["disk_usage"] = disk_usage()
     output["net_speed"] = net_speed()
     return output
+
+class Device:
+    cores = cpu_freq()
+    ram_size = ram_dimension()
+    net_interfaces = net_addr()
+    disk_size = disk_dimension()
+    thermal_sensors = termal_sensors()
+    environment = env_info()
+
+
+bootMonitor()

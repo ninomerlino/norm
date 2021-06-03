@@ -98,8 +98,7 @@ class ServerConnection{
         return await response.json()
     }
     static async update(){
-        while (run_switch.checked){
-            if(window.location.pathname == "/") {
+        while (run_switch.checked && window.location.pathname == "/"){
                 let new_data = await ServerConnection.get('/update');
                 for(let index of Object.keys(remote_collected_data.cpu_usage)){
                     push_with_buffersize(remote_collected_data.cpu_usage[index].data, new_data.cpu_usage[index])
@@ -126,7 +125,6 @@ class ServerConnection{
                 ChartManager.net_traffic_chart_recieved.updateSeries(remote_collected_data.net_traffic_recieved);
                 ChartManager.ram_usage_chart.updateSeries(remote_collected_data.ram_usage);
                 await ServerConnection.sleep();
-            }
         }
     }
 }
