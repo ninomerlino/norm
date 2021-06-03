@@ -3,7 +3,7 @@ import platform
 import subprocess
 from math import sqrt
 
-system = ''
+process_keys = ['ppid','name','status','username','cpu_times','cpu_percent']
 prev_data = {}
 max_process_name = 100
 hz_scale = ['MHz','GHz','THz']
@@ -125,18 +125,17 @@ def disk_usage():
     return disk[3]
 
 def look_for_process(search_value = ''):
-    keys = ['ppid','name','status','username','cpu_times','cpu_percent']
-    if system == "Windows" and 'ppid' in keys:
-        keys.remove('ppid')
-    process = psutil.process_iter(keys)
+    if Device.environment['system'] == "Windows":
+        process_keys.remove('ppid')
+    process = psutil.process_iter(process_keys)
     output = []
     for p in process:
         p = p.info
         p['ppid'] = str(p['ppid'])
         p['cpu_percent'] = str(p['cpu_percent'])
         p['cpu_times'] = str(sum(p['cpu_times']))
-        p = "\n".join(p.values())
-        if search_value in p:
+        phash = "\n".join(p.values())
+        if search_value in phash:
             output.append(p)
     return output
     

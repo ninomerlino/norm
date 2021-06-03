@@ -159,6 +159,46 @@ function names_of_objects(list){
     names.push(remote_collected_data.net_traffic[inx].name);
     return names;
 }
+function getCheckBox(id){
+    if(document.getElementById(id) && document.getElementById(id).checked){
+        return true;
+    }else{
+        return false;
+    }
+}
+function generateTable(programs){
+    programs = programs.proc
+    let table = document.getElementById('process_table');
+    //get fields to show
+    let id = getCheckBox('checkbox_id');
+    let name = getCheckBox('checkbox_name');
+    let status = getCheckBox('checkbox_status');
+    let username = getCheckBox('checkbox_username');
+    let time = getCheckBox('checkbox_cputime');
+    let perc = getCheckBox('checkbox_cpupercentage');
+    //generate table header
+    let html = "<thead><tr>"
+    if(id) html+= '<th>ppid</th>'
+    if(name) html+= '<th>name</th>'
+    if(status) html+= '<th>status</th>'
+    if(username) html+= '<th>username</th>'
+    if(time) html+= '<th>cpu time</th>'
+    if(perc) html+= '<th>cpu percentage</th>'
+    html += '</tr></thead><tbody>'
+    //generate table values
+    for(let i=0; i<programs.length; i++){
+        html += "<tr>"
+        if(id) html+= '<td>'+programs[i].ppid+'</td>'
+        if(name) html+= '<td>'+programs[i].name+'</td>'
+        if(status) html+= '<td>'+programs[i].status+'</td>'
+        if(username) html+= '<td>'+programs[i].username+'</td>'
+        if(time) html+= '<td>'+programs[i].cpu_times+'</td>'
+        if(perc) html+= '<td>'+programs[i].cpu_percent+'</td>'
+        html += "</tr>"
+    }
+    html += "</tbody>"
+    table.innerHTML = html;
+}
 //Events
 adv_settings_switch.addEventListener(
     'click',
@@ -234,6 +274,14 @@ document.getElementById('warning_thermal_input').addEventListener(
         if(value <= 100 && value >= 0)Settings.warning_thermal_treshold = value;
     }    
 );
+document.getElementById('searchbar').addEventListener(
+    'input',
+    (event) => {
+        let word = event.target.value
+        ServerConnection.get("/process?search="+word).then(generateTable)
+        
+    }
+)
 run_switch.addEventListener(
     'click',
     () => {

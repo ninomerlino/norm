@@ -14,7 +14,7 @@ def update():
 
 @app.route('/process', methods = ['GET'])
 def process():
-    search_value = request.args.get('search_value',default=None, type=str)
+    search_value = request.args.get('search',default=None, type=str)
     if search_value:
         return {'proc':look_for_process(search_value)}
     else:
