@@ -1,0 +1,13 @@
+
+FrontEnd:
+  ☐ rework proccess page
+  ☐ add ispector chart
+  ☐ custom scriptsItem
+
+Backend:
+  ☐ save settings on remote
+  ☐ add user auth with jwt
+
+GitHub:
+  ☐ improve readme
+  ☐ improve .deb

@@ -1,9 +1,48 @@
 import psutil
 import platform
 import subprocess
+from math import sqrt
 
+process_keys = ['ppid','name','status','username','cpu_times','cpu_percent']
 prev_data = {}
 max_process_name = 100
+hz_scale = ['MHz','GHz','THz']
+byte_scale = ["byte", "KB","MB","GB","TB","PB"]
+interface_names = []
+
+def scale_hz(freq):
+    i = 0
+    while freq > 1000:
+        freq /= 1000
+        i += 1
+    return str(freq) + hz_scale[i]
+
+def scale_byte(size):
+    i = 0
+    while size > 1000:
+        size /= 1000
+        i += 1
+    return str(round(size)) + byte_scale[i]
+
+def resize_close_to_square(array):
+    '''
+    finds a and b where a*b = x and a is the closest int to
+    the square root of x then rezise the list as a 2d array
+    with a columns and b rows
+    '''
+    length = len(array)
+    new_lenth = int(sqrt(length))+1
+    output = []
+    i = 0
+    for r in range(new_lenth):
+        output.append([])
+        for c in range(new_lenth):
+            if i < length:
+                output[r].append(array[i])
+            else:
+                output[r].append(None)
+            i += 1
+    return output
 
 def env_info():
     system = platform.system()
@@ -33,13 +72,14 @@ def cpu_freq():
     output = {}
     i = 0
     while(i < len(corelist)):#brutto ma for loop non funziona se i core sono uguali
-        output[f"core {i}"] = [corelist[i][1], corelist[i][2]]
+        output[f"core {i}"] = [scale_hz(corelist[i][1]),scale_hz(corelist[i][2])]
         i+=1
     return output
 
 def termal_sensors():
     temp = psutil.sensors_temperatures()
-    return list(temp.keys())
+    temp = list(temp.keys())
+    return resize_close_to_square(temp)
 
 def temp():
     temp = psutil.sensors_temperatures()
@@ -50,63 +90,66 @@ def temp():
 
 def ram_dimension():
     ram = psutil.virtual_memory()
-    return ram[0]    
+    return scale_byte(ram[0])    
 
 def ram_usage():
     ram = psutil.virtual_memory()
     return ram[2]
 
 def net_addr():
+    global interface_names
     interfaces = psutil.net_if_addrs()
+    interface_names = list(interfaces.keys())
     output = {}
-    for interface in interfaces.keys():
-        output[interface + "(sent)"] = interfaces[interface][0][1]
-        output[interface + "(recv)"] = interfaces[interface][0][1]
+    for name in interface_names:
+        output[name] = [interfaces[name][0][1],interfaces[name][0][2]]
     return output
 
-def net_speed():
+def net_speed():#net speed ma in realta controlla il traffico
     global prev_data
     interfaces = psutil.net_io_counters(pernic=True,nowrap=False)
     output = {}
-    for interface in interfaces.keys():
-        output[interface + "(sent)"] = interfaces[interface][2] - prev_data[interface]["sent"]
-        output[interface + "(recv)"] = interfaces[interface][3] - prev_data[interface]["recv"]
+    for interface in interface_names:
+        output[interface] = [interfaces[interface][2] - prev_data[interface]["sent"], interfaces[interface][3] - prev_data[interface]["recv"]]
         prev_data[interface]["sent"] = interfaces[interface][2]
         prev_data[interface]["recv"] = interfaces[interface][3]
-
     return output
 
 def disk_dimension():
     disk = psutil.disk_usage("/")
-    return disk[0]  
+    return scale_byte(disk[0])  
 
 def disk_usage():
     disk = psutil.disk_usage("/")
     return disk[3]
 
-def create_process_dict(string):
-    col = list(filter(lambda x: x!='', string.strip().split(" ")))
-    args = ""
-    if len(col) > 4:
-        args = " ".join(col[4:])
-    return {'pid':col[0], 'user':col[1], 'time':col[2], 'cmd':col[3][:max_process_name], 'args':args}
+def look_for_process(search_value = ''):
+    if Device.environment['system'] == "Windows":
+        process_keys.remove('ppid')
+    process = psutil.process_iter(process_keys)
+    output = []
+    for p in process:
+        p = p.info
+        p['ppid'] = str(p['ppid'])
+        p['cpu_percent'] = str(p['cpu_percent'])
+        p['cpu_times'] = str(sum(p['cpu_times']))
+        phash = "\n".join(p.values())
+        if search_value in phash:
+            output.append(p)
+    return output
+    
 
-def setup() -> dict :
+def bootMonitor():
+    '''
+    init the monitor module
+    '''
     global prev_data
     tmp = psutil.net_io_counters(pernic=True)
-    for interface in tmp.keys():
+    for interface in tmp.keys(): #inizializa i valori di prev_data per ottenere la differenza di pacchetti e non il numero totale
         prev_data[interface] = {} 
         prev_data[interface]["sent"] = tmp[interface][2]
         prev_data[interface]["recv"] = tmp[interface][3]
     psutil.cpu_percent(percpu=True) #non sono pazzo ci serve qua
-    output = {}
-    output['cpu'] = cpu_freq()
-    output['ram'] = ram_dimension()
-    output['net'] = net_addr()
-    output['disk'] = disk_dimension()
-    output["temp"] = termal_sensors()
-    output['env'] = env_info()
-    return output
 
 def dynamic() -> dict :
     output = {}
@@ -117,11 +160,13 @@ def dynamic() -> dict :
     output["net_speed"] = net_speed()
     return output
 
-def process_list(proc_name):
-    output = []
-    if platform.system() == 'Linux':
-        all_process = subprocess.check_output(["ps","-e","--format","pid,user,time,cmd"]).decode("UTF-8").split("\n")
-        for process in all_process:
-            if proc_name in process and process != '':
-                output.append(create_process_dict(process))
-    return output
+class Device:
+    cores = cpu_freq()
+    ram_size = ram_dimension()
+    net_interfaces = net_addr()
+    disk_size = disk_dimension()
+    thermal_sensors = termal_sensors()
+    environment = env_info()
+
+
+bootMonitor()

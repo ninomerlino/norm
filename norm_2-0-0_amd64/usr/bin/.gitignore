@@ -1,0 +1,10 @@
+norm/__pycache__/
+__pycache__/
+.vscode/*
+test.py
+compile.py
+*.deb
+.vscode/launch.json
+TODO
+norm.info
+norm_2-0-0_amd64/

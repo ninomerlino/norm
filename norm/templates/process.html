@@ -1,52 +1,43 @@
-<!doctype html>
-
-<html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <link rel="icon" href="{{ url_for('static', filename='media/icon.jpg') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/norm-custom.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/norm-main.css') }}">
-        <script src="{{ url_for('static', filename='js/process.js') }}"></script>
-        <title>Norm</title>
-    </head>
-    <body onload="start_page()" class="white">
-        <nav class="navbar is-primary gradient" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
-                    <figure class="image is-64x64 m-3">
-                        <a href="{{ url_for('index') }}"><img id="pause-button" class="is-rounded" height="100px" width="100px" src="{{ url_for('static', filename='media/icon.jpg') }}"></a>
-                    </figure>
-            </div>
-            <div id="links" class="navbar-menu"><div class="navbar-start">
-                <a class="navbar-item" href="{{ url_for('index') }}">Home</a>
-                <a class="navbar-item" href="{{ url_for('process') }}">Process list</a>
-            </div></div>
-        </nav>
-        <!-- navbar -->
-        <div class="level p-3">
-            <div class="level-item">
-                <input type="text" class="input is-rounded is-medium mt-6 ml-6 mr-6 mb-1 has-text-centered" id="search_bar">
-            </div>
+{% extends "base.html" %}
+{% block body %}
+<div class="column mr-4 mt-1">
+    <form action="">
+        <div class="field">
+            <input class="input is-rounded" type="text" placeholder="Search bar" id="searchbar">
         </div>
-        <section class="section">
-            <table class="container table is-family-code white is-striped">
-                <thead><tr>
-                    <th>PID</th>
-                    <th>USER</th>
-                    <th>TIME</th>
-                    <th>COMMAND</th>
-                    <th>ARGS</th>
-                </tr></thead>
-                <tfoot><tr>
-                    <th>PID</th>
-                    <th>USER</th>
-                    <th>TIME</th>
-                    <th>COMMAND</th>
-                    <th>ARGS</th>
-                </tr></tfoot>
-                <tbody id="process_list">
-                </tbody>
-              </table>
-        </section>
-    </body>
-</html>
+        <div class="field">
+            {% if env.system != "Windows" %}
+            <label class="checkbox m-2">
+                <input id="checkbox_id" type="checkbox" checked=true>
+                ppid
+            </label>
+            {% endif %}
+            <label class="checkbox m-2">
+                <input id="checkbox_name" type="checkbox" checked=true>
+                name
+            </label>
+            <label class="checkbox m-2">
+                <input id="checkbox_status" type="checkbox" checked=true>
+                status
+            </label>
+            <label class="checkbox m-2">
+                <input id="checkbox_username" type="checkbox" checked=true>
+                username
+            </label>
+            <label class="checkbox m-2">
+                <input id="checkbox_cputime" type="checkbox" checked=true>
+                cpu time
+            </label>
+            <label class="checkbox m-2">
+                <input id="checkbox_cpupercentage" type="checkbox" checked=true>
+                cpu percentage
+            </label>
+        </div>
+    </form>
+    <div class="container">
+        <div class="title">Active process list</div>
+        <table class="table" id="process_table">
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,9 +1,10 @@
-Package: norm-monitor
-Version: 1.0.3
+Package: norm
+Version: 2.0.0
 Section: custom
 Priority: optional
 Architecture: all
 Essential: no
-Installed-Size: 9263312
+Installed-Size: 9075136
 Maintainer: norm.ninomerlino.idkgithubiguess
 Description: Norm allows you to monitor your computer basic statistics over the network it was created to have very light server side and a simple and easy to read client
+pyinstaller --onefile --add-data 'norm/templates:norm/templates' --add-data 'norm/static:norm/static' build_main.py
