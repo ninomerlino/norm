@@ -45,7 +45,6 @@ def resize_close_to_square(array):
     return output
 
 def env_info():
-    global system
     system = platform.system()
     os = platform.node()
     if "Windows" in system:
