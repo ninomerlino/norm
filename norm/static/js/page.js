@@ -27,8 +27,10 @@ class ChartManager{
     static net_usage_chart;
     static ram_usage_chart;
     static temp_chart;
-    static cpu_chart(canvas_id, data, type = 'line'){//dataset = {name, data}
-       return new ApexCharts(document.getElementById(canvas_id), {
+    static cpu_chart(canvas_id, data, type = 'line', percentage = false){//dataset = {name, data}
+        let yaxis = {}
+        if(percentage)yaxis = {max:100, min:0}
+        return new ApexCharts(document.getElementById(canvas_id), {
             chart: {type: type, height: '90%',
             animations: {enabled: false, easing: 'linear',},
             toolbar: {tools: {download: true,selection: false,zoom: true,zoomin: true,
@@ -37,6 +39,7 @@ class ChartManager{
             stroke: {width: 3, curve: 'smooth'},
             series: data,
             xaxis: {labels:{show:false}},
+            yaxis: yaxis
         });
     }
     static disk_chart(canvas_id){
@@ -61,13 +64,12 @@ class ChartManager{
         for(let f of document.getElementsByClassName('thermal-name')){
             remote_collected_data.temp.push({name:f.innerText,data:[]})
         }
-        remote_collected_data.ram_usage = [{name:'ram',data:[]}]
-        ChartManager.cpu_usage_chart = ChartManager.cpu_chart('cpu_canvas', remote_collected_data.cpu_usage);
+        ChartManager.cpu_usage_chart = ChartManager.cpu_chart('cpu_canvas', remote_collected_data.cpu_usage, 'line', true);
         ChartManager.disk_usage_chart = ChartManager.disk_chart('disk_canvas');
         ChartManager.net_traffic_chart_send = ChartManager.cpu_chart('net_canvas', remote_collected_data.net_traffic_sent);
         ChartManager.net_traffic_chart_recieved = ChartManager.cpu_chart('net_canvas2', remote_collected_data.net_traffic_recieved);
         ChartManager.temp_chart = ChartManager.cpu_chart('thermal_canvas', remote_collected_data.temp);
-        ChartManager.ram_usage_chart = ChartManager.cpu_chart('ram_canvas', remote_collected_data.ram_usage, 'area')
+        ChartManager.ram_usage_chart = ChartManager.cpu_chart('ram_canvas', [{name:"ram used percentage",data:remote_collected_data.ram_usage}], 'area', true)
         ChartManager.disk_usage_chart.render();
         ChartManager.cpu_usage_chart.render();
         ChartManager.net_traffic_chart_send.render();
@@ -114,13 +116,13 @@ class ServerConnection{
                 }
                 push_with_buffersize(remote_collected_data.ram_usage, new_data.ram)
                 push_with_buffersize(remote_collected_data.disk_usage, new_data.disk_usage);
-                push_with_buffersize(remote_collected_data.ram_usage[0].data, new_data.ram);
+                push_with_buffersize(remote_collected_data.ram_usage, new_data.ram);
                 ChartManager.cpu_usage_chart.updateSeries(remote_collected_data.cpu_usage);
                 ChartManager.temp_chart.updateSeries(remote_collected_data.temp);
                 ChartManager.disk_usage_chart.updateSeries([new_data.disk_usage]);
                 ChartManager.net_traffic_chart_send.updateSeries(remote_collected_data.net_traffic_sent);
                 ChartManager.net_traffic_chart_recieved.updateSeries(remote_collected_data.net_traffic_recieved);
-                ChartManager.ram_usage_chart.updateSeries(remote_collected_data.ram_usage);
+                ChartManager.ram_usage_chart.updateSeries([{name:"ram used percentage",data:remote_collected_data.ram_usage}]);
                 await ServerConnection.sleep();
         }
     }
@@ -148,7 +150,13 @@ function start(){
 }
 function push_with_buffersize(arr, value){
     arr.push(value);
-    while(arr.length > Settings.buffer_size)arr.shift();
+    let i = 0;
+    let r = arr.length - Settings.buffer_size;
+    try {
+        while(arr.length > Settings.buffer_size){arr.shift();i++}
+    } catch (error) {
+        console.log(r, i);
+    }
 }
 function names_of_objects(list){
     let names = []
