@@ -18,8 +18,6 @@ class Settings{
     static buffer_size = 100;
     static danger_core_treshold = 90;
     static warning_core_treshold = 70;
-    static danger_thermal_treshold = 90;
-    static warning_thermal_treshold = 70;
 }
 class ChartManager{
     static cpu_usage_chart;
@@ -113,7 +111,6 @@ class ServerConnection{
                 for(let inx = 0; inx < remote_collected_data.temp.length; inx++){
                     let el = remote_collected_data.temp[inx];
                     push_with_buffersize(el.data, new_data.temp[el.name]);
-                    change_status(new_data.temp[el.name], el.name, Settings.danger_thermal_treshold, Settings.warning_thermal_treshold, "is-", true);
                 }
                 push_with_buffersize(remote_collected_data.ram_usage, new_data.ram)
                 push_with_buffersize(remote_collected_data.disk_usage, new_data.disk_usage);
@@ -274,14 +271,14 @@ document.getElementById('warning_thermal_input').addEventListener(
         if(value <= 100 && value >= 0)Settings.warning_thermal_treshold = value;
     }    
 );
-document.getElementById('searchbar').addEventListener(
+if(window.location.pathname == "/process"){document.getElementById('searchbar').addEventListener(
     'input',
     (event) => {
         let word = event.target.value
         ServerConnection.get("/process?search="+word).then(generateTable)
         
     }
-)
+)}
 run_switch.addEventListener(
     'click',
     () => {
