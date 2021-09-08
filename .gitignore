@@ -7,4 +7,5 @@ compile.py
 .vscode/launch.json
 TODO
 norm.info
-norm_2-0-0_amd64/
+norm_2-1-0_amd64/
+build*

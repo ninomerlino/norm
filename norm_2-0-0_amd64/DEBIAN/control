@@ -1,9 +1,0 @@
-Package: norm
-Version: 2.0.0
-Section: custom
-Priority: optional
-Architecture: amd64
-Essential: no
-Installed-Size: 9075136
-Maintainer: norm.ninomerlino.idkgithubiguess
-Description: Norm allows you to monitor your computer basic statistics over the network it was created to have very light server side and a simple and easy to read client
