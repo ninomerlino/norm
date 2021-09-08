@@ -40,4 +40,12 @@
         </table>
     </div>
 </div>
+<div class="modal" id="processDetailsLauncher">
+    <div class="modal-background" onclick="document.getElementById('processDetailsLauncher').classList.remove('is-active');"></div>
+    <div class="modal-content" id="processDetails">
+    </div>
+  </div>
+<script>
+    var initProc = {{ proc|safe }};
+</script>
 {% endblock %}

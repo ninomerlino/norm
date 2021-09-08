@@ -128,11 +128,12 @@ def look_for_process(search_value = ''):
         process_keys.remove('ppid')
     process = psutil.process_iter(process_keys)
     output = []
-    for p in process:
-        p = p.info
+    for proc in process:
+        p = proc.info
         p['ppid'] = str(p['ppid'])
         p['cpu_percent'] = str(p['cpu_percent'])
         p['cpu_times'] = str(sum(p['cpu_times']))
+        p['cmdline'] = " ".join(proc.cmdline())
         phash = "\n".join(p.values())
         if search_value in phash:
             output.append(p)

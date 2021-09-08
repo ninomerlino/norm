@@ -5,6 +5,7 @@ const settings_rate_switch = document.getElementById("settings_rate_switch");
 const settings_rate_list = document.getElementById("settings_rate_list");
 const run_switch = document.getElementById('run_switch');
 var remote_collected_data = {
+    process_list:[],
     cpu_usage:[],
     net_traffic_recieved:[],
     net_traffic_sent:[],
@@ -171,8 +172,25 @@ function getCheckBox(id){
         return false;
     }
 }
+function launchDetailsModal(procIndex){
+    let process = remote_collected_data.process_list[procIndex];
+    let body = document.getElementById("processDetails");
+    let html = `<div class="card">
+    <header class="card-header"><p class="card-header-title">${process.ppid} ${process.name}</p></header>
+    <div class="card-content"><div class="content">
+    <p>ppid:${process.ppid} name:${process.name}</p>
+    <p><span class"has-text-weight-bold">CPU</span> time:${process.cpu_times} precentage:${process.cpu_percent}</p>
+    <p>was executed with comand line : </br>${process.cmdline}</p>
+    </div></div>
+    <footer class="card-footer">
+    <a href="#" class="card-footer-item has-text-danger" onclick="document.getElementById('processDetailsLauncher').classList.remove('is-active');">Close</a>
+    </footer>
+    </div>`
+    body.innerHTML = html;
+    document.getElementById("processDetailsLauncher").classList.add("is-active");
+}
 function generateTable(programs){
-    programs = programs.proc
+    remote_collected_data.process_list = programs;
     let table = document.getElementById('process_table');
     //get fields to show
     let id = getCheckBox('checkbox_id');
@@ -192,7 +210,7 @@ function generateTable(programs){
     html += '</tr></thead><tbody>'
     //generate table values
     for(let i=0; i<programs.length; i++){
-        html += "<tr>"
+        html += "<tr onclick=\"launchDetailsModal("+i+")\">"
         if(id) html+= '<td>'+programs[i].ppid+'</td>'
         if(name) html+= '<td>'+programs[i].name+'</td>'
         if(status) html+= '<td>'+programs[i].status+'</td>'
@@ -279,9 +297,11 @@ document.getElementById('warning_thermal_input').addEventListener(
         if(value <= 100 && value >= 0)Settings.warning_thermal_treshold = value;
     }    
 );
-if(window.location.pathname == "/process"){document.getElementById('searchbar').addEventListener(
-    'input',
-    (event) => {
+if(window.location.pathname == "/process"){
+    generateTable(initProc);
+    delete(initProc);
+    document.getElementById('searchbar').addEventListener('input',(event) => 
+    {
         let word = event.target.value
         ServerConnection.get("/process?search="+word).then(generateTable)
         

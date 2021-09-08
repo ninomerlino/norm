@@ -1,5 +1,6 @@
 from .monitoring import dynamic, look_for_process, Device
 from flask import Flask, render_template, request
+from json import dumps as jdumps
 
 app = Flask(__name__)
 @app.route('/', methods = ['GET'])
@@ -16,8 +17,8 @@ def update():
 def process():
     search_value = request.args.get('search',default=None, type=str)
     if search_value:
-        return {'proc':look_for_process(search_value)}
+        return jdumps(look_for_process(search_value))
     else:
-        return render_template("process.html",env=Device.environment)
+        return render_template("process.html",env=Device.environment, proc=jdumps(look_for_process(search_value)))
 
 
